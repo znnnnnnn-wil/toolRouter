@@ -9,3 +9,4 @@ target/
 .jdk21.zip
 .benchmark-cache/
 .mvn/central-settings.xml
+benchmark/dataset.json
