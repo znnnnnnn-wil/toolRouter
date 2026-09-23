@@ -5,3 +5,7 @@ target/
 *.log
 .env
 .m2repo/
+.jdk21/
+.jdk21.zip
+.benchmark-cache/
+.mvn/central-settings.xml

@@ -6,7 +6,7 @@ import java.util.List;
 public interface ToolRouter {
     List<RouteResult> route(String query, int topK);
 
-    default RouteResponse routeWithConfidence(String query, int topK) {
+    default RouteResponse routeWithHint(String query, int topK) {
         List<RouteResult> results = route(query, topK);
         if (results.isEmpty()) return new RouteResponse(results, 0, true);
         if (results.size() == 1) return new RouteResponse(results, 0, true);
@@ -18,4 +18,3 @@ public interface ToolRouter {
         return new RouteResponse(results, gap, first <= 0 || gap < 0.1);
     }
 }
-
