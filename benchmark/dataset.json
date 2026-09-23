@@ -1,0 +1,2208 @@
+{
+  "tools": [
+    {
+      "name": "get_order",
+      "description": "Get the status and details of one existing order",
+      "tags": [
+        "order",
+        "status",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_orders",
+      "description": "Find multiple orders matching customer and date filters",
+      "tags": [
+        "order",
+        "search",
+        "list"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancel an order before fulfillment",
+      "tags": [
+        "order",
+        "cancel",
+        "fulfillment"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_order",
+      "description": "Change shipping address or notes on an open order",
+      "tags": [
+        "order",
+        "update",
+        "address"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "delete_order",
+      "description": "Permanently delete an order record",
+      "tags": [
+        "order",
+        "delete",
+        "record"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_payment",
+      "description": "Get payment transaction status and amount",
+      "tags": [
+        "payment",
+        "status",
+        "transaction"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_payments",
+      "description": "Find payment transactions by date or customer",
+      "tags": [
+        "payment",
+        "search",
+        "transactions"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "refund_payment",
+      "description": "Return money from a captured payment",
+      "tags": [
+        "payment",
+        "refund",
+        "money"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_payment",
+      "description": "Void an authorized but uncaptured payment",
+      "tags": [
+        "payment",
+        "cancel",
+        "authorization"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "capture_payment",
+      "description": "Capture an authorized payment",
+      "tags": [
+        "payment",
+        "capture",
+        "settlement"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "send_email",
+      "description": "Send a composed email message immediately",
+      "tags": [
+        "email",
+        "send",
+        "message"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "draft_email",
+      "description": "Create an unsent email draft",
+      "tags": [
+        "email",
+        "draft",
+        "compose"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_email",
+      "description": "Find email messages in a mailbox",
+      "tags": [
+        "email",
+        "search",
+        "inbox"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "delete_email",
+      "description": "Delete an email message",
+      "tags": [
+        "email",
+        "delete",
+        "trash"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "archive_email",
+      "description": "Archive an email without deleting it",
+      "tags": [
+        "email",
+        "archive",
+        "inbox"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_event",
+      "description": "Read one calendar event and its attendees",
+      "tags": [
+        "calendar",
+        "event",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_events",
+      "description": "Find calendar events within a time window",
+      "tags": [
+        "calendar",
+        "search",
+        "schedule"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_event",
+      "description": "Schedule a new calendar event",
+      "tags": [
+        "calendar",
+        "create",
+        "meeting"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_event",
+      "description": "Change the time or details of a calendar event",
+      "tags": [
+        "calendar",
+        "update",
+        "reschedule"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_event",
+      "description": "Cancel a scheduled event and notify attendees",
+      "tags": [
+        "calendar",
+        "cancel",
+        "meeting"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_weather",
+      "description": "Get current weather conditions for a place",
+      "tags": [
+        "weather",
+        "current",
+        "conditions"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "weather_forecast",
+      "description": "Get predicted weather for future dates",
+      "tags": [
+        "weather",
+        "forecast",
+        "future"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "weather_history",
+      "description": "Read observed weather on a past date",
+      "tags": [
+        "weather",
+        "history",
+        "past"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_location",
+      "description": "Resolve a place name to weather location identifiers",
+      "tags": [
+        "weather",
+        "location",
+        "search"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_city",
+      "description": "Read city metadata such as timezone and coordinates",
+      "tags": [
+        "city",
+        "location",
+        "metadata"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_flights",
+      "description": "Find available flights for a route and date",
+      "tags": [
+        "travel",
+        "flight",
+        "search"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "book_flight",
+      "description": "Reserve a selected flight itinerary",
+      "tags": [
+        "travel",
+        "flight",
+        "book"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_flight",
+      "description": "Cancel an existing flight reservation",
+      "tags": [
+        "travel",
+        "flight",
+        "cancel"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_itinerary",
+      "description": "Read booked travel itinerary and segments",
+      "tags": [
+        "travel",
+        "itinerary",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "check_flight_status",
+      "description": "Get live departure or arrival status of a flight",
+      "tags": [
+        "travel",
+        "flight",
+        "status"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_hotels",
+      "description": "Find hotels by city and dates",
+      "tags": [
+        "hotel",
+        "search",
+        "availability"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "book_hotel",
+      "description": "Reserve a hotel room",
+      "tags": [
+        "hotel",
+        "book",
+        "reservation"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_hotel",
+      "description": "Cancel a hotel reservation",
+      "tags": [
+        "hotel",
+        "cancel",
+        "booking"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_hotel_booking",
+      "description": "Read details of an existing hotel booking",
+      "tags": [
+        "hotel",
+        "booking",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "modify_hotel_booking",
+      "description": "Change dates or room type of an existing booking",
+      "tags": [
+        "hotel",
+        "booking",
+        "modify"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_file",
+      "description": "Read content and metadata of a file",
+      "tags": [
+        "file",
+        "read",
+        "content"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_files",
+      "description": "Find files by name or metadata",
+      "tags": [
+        "file",
+        "search",
+        "list"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "upload_file",
+      "description": "Upload a new file",
+      "tags": [
+        "file",
+        "upload",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "delete_file",
+      "description": "Remove a file from storage",
+      "tags": [
+        "file",
+        "delete",
+        "remove"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "move_file",
+      "description": "Relocate a file to another folder",
+      "tags": [
+        "file",
+        "move",
+        "folder"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "run_query",
+      "description": "Execute a read only SQL query",
+      "tags": [
+        "database",
+        "sql",
+        "select"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_table_schema",
+      "description": "Inspect columns and types of a database table",
+      "tags": [
+        "database",
+        "schema",
+        "columns"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "insert_row",
+      "description": "Add a new row to a database table",
+      "tags": [
+        "database",
+        "insert",
+        "row"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_row",
+      "description": "Modify an existing database row",
+      "tags": [
+        "database",
+        "update",
+        "row"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "delete_row",
+      "description": "Remove an existing database row",
+      "tags": [
+        "database",
+        "delete",
+        "row"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_issue",
+      "description": "Read a GitHub issue and its comments",
+      "tags": [
+        "github",
+        "issue",
+        "read"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_issues",
+      "description": "Find GitHub issues by repository and filters",
+      "tags": [
+        "github",
+        "issue",
+        "search"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_issue",
+      "description": "Open a new GitHub issue",
+      "tags": [
+        "github",
+        "issue",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "close_issue",
+      "description": "Close an existing GitHub issue",
+      "tags": [
+        "github",
+        "issue",
+        "close"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_pull_request",
+      "description": "Open a pull request from a branch",
+      "tags": [
+        "github",
+        "pull",
+        "request",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_user",
+      "description": "Read a user profile",
+      "tags": [
+        "user",
+        "account",
+        "profile"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_users",
+      "description": "Find user accounts by criteria",
+      "tags": [
+        "user",
+        "account",
+        "search"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_user",
+      "description": "Create a new user account",
+      "tags": [
+        "user",
+        "account",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_user",
+      "description": "Change a user profile",
+      "tags": [
+        "user",
+        "account",
+        "update"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "deactivate_user",
+      "description": "Disable an account without deleting it",
+      "tags": [
+        "user",
+        "account",
+        "deactivate"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "send_notification",
+      "description": "Send an immediate app notification",
+      "tags": [
+        "notification",
+        "send",
+        "push"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "schedule_notification",
+      "description": "Queue a notification for later delivery",
+      "tags": [
+        "notification",
+        "schedule",
+        "later"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_notification",
+      "description": "Read notification delivery status",
+      "tags": [
+        "notification",
+        "status",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "list_notifications",
+      "description": "List notifications for a user",
+      "tags": [
+        "notification",
+        "list",
+        "history"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_notification",
+      "description": "Cancel a queued notification",
+      "tags": [
+        "notification",
+        "cancel",
+        "scheduled"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "web_search",
+      "description": "Search public web pages",
+      "tags": [
+        "search",
+        "web",
+        "internet"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "image_search",
+      "description": "Find images on the public web",
+      "tags": [
+        "search",
+        "image",
+        "pictures"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "news_search",
+      "description": "Find news articles by topic",
+      "tags": [
+        "search",
+        "news",
+        "articles"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "product_search",
+      "description": "Find catalog products by keywords",
+      "tags": [
+        "search",
+        "product",
+        "catalog"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "knowledge_search",
+      "description": "Search internal knowledge base articles",
+      "tags": [
+        "search",
+        "knowledge",
+        "internal"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_document",
+      "description": "Create a new editable document",
+      "tags": [
+        "document",
+        "create",
+        "text"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_document",
+      "description": "Read an existing document",
+      "tags": [
+        "document",
+        "read",
+        "content"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_document",
+      "description": "Edit content of an existing document",
+      "tags": [
+        "document",
+        "update",
+        "edit"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "summarize_document",
+      "description": "Produce a summary of document content",
+      "tags": [
+        "document",
+        "summarize",
+        "abstract"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "export_document",
+      "description": "Convert a document to PDF or another format",
+      "tags": [
+        "document",
+        "export",
+        "convert"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_metric",
+      "description": "Read the current value of one metric",
+      "tags": [
+        "analytics",
+        "metric",
+        "value"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "run_report",
+      "description": "Generate an analytics report over a period",
+      "tags": [
+        "analytics",
+        "report",
+        "generate"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_dashboard",
+      "description": "Create an analytics dashboard",
+      "tags": [
+        "analytics",
+        "dashboard",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_dashboard",
+      "description": "Read an existing analytics dashboard",
+      "tags": [
+        "analytics",
+        "dashboard",
+        "read"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "export_report",
+      "description": "Download a generated report",
+      "tags": [
+        "analytics",
+        "report",
+        "export"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_stock",
+      "description": "Read available quantity of a product",
+      "tags": [
+        "inventory",
+        "stock",
+        "quantity"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_inventory",
+      "description": "Find inventory items by filters",
+      "tags": [
+        "inventory",
+        "search",
+        "items"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "reserve_stock",
+      "description": "Hold units for an order",
+      "tags": [
+        "inventory",
+        "reserve",
+        "stock"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "release_stock",
+      "description": "Return reserved units to available stock",
+      "tags": [
+        "inventory",
+        "release",
+        "stock"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "adjust_stock",
+      "description": "Correct recorded stock quantity",
+      "tags": [
+        "inventory",
+        "adjust",
+        "quantity"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_shipment",
+      "description": "Read shipment tracking and status",
+      "tags": [
+        "shipping",
+        "shipment",
+        "tracking"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_shipment",
+      "description": "Create a new shipment for an order",
+      "tags": [
+        "shipping",
+        "shipment",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "cancel_shipment",
+      "description": "Cancel a shipment before pickup",
+      "tags": [
+        "shipping",
+        "shipment",
+        "cancel"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_delivery_address",
+      "description": "Change a shipment destination address",
+      "tags": [
+        "shipping",
+        "delivery",
+        "address"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "list_shipments",
+      "description": "Find multiple shipments for an order or customer",
+      "tags": [
+        "shipping",
+        "shipment",
+        "list"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_ticket",
+      "description": "Read one customer support ticket",
+      "tags": [
+        "support",
+        "ticket",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_tickets",
+      "description": "Find support tickets by filters",
+      "tags": [
+        "support",
+        "ticket",
+        "search"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_ticket",
+      "description": "Open a new support ticket",
+      "tags": [
+        "support",
+        "ticket",
+        "create"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "assign_ticket",
+      "description": "Assign a support ticket to an agent",
+      "tags": [
+        "support",
+        "ticket",
+        "assign"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "close_ticket",
+      "description": "Close a resolved support ticket",
+      "tags": [
+        "support",
+        "ticket",
+        "close"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "get_task",
+      "description": "Read details of one work task",
+      "tags": [
+        "task",
+        "read",
+        "details"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "search_tasks",
+      "description": "Find tasks by project or status",
+      "tags": [
+        "task",
+        "search",
+        "list"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "create_task",
+      "description": "Create a work task",
+      "tags": [
+        "task",
+        "create",
+        "work"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "update_task",
+      "description": "Change task description or due date",
+      "tags": [
+        "task",
+        "update",
+        "edit"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "complete_task",
+      "description": "Mark a work task finished",
+      "tags": [
+        "task",
+        "complete",
+        "done"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "check_permission",
+      "description": "Check whether a user may perform an action",
+      "tags": [
+        "security",
+        "permission",
+        "authorize"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "grant_permission",
+      "description": "Give a user a permission",
+      "tags": [
+        "security",
+        "permission",
+        "grant"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "revoke_permission",
+      "description": "Remove a permission from a user",
+      "tags": [
+        "security",
+        "permission",
+        "revoke"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "list_audit_events",
+      "description": "Read security audit events",
+      "tags": [
+        "security",
+        "audit",
+        "events"
+      ],
+      "inputSchema": null
+    },
+    {
+      "name": "rotate_api_key",
+      "description": "Replace an API key with a new secret",
+      "tags": [
+        "security",
+        "api",
+        "key",
+        "rotate"
+      ],
+      "inputSchema": null
+    }
+  ],
+  "queries": [
+    {
+      "query": "Show the status of order 1024",
+      "expectedTool": "get_order",
+      "category": "order",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Where is the purchase I made yesterday in its lifecycle?",
+      "expectedTool": "get_order",
+      "category": "order",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List all orders placed last week",
+      "expectedTool": "search_orders",
+      "category": "order",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which purchases did this customer make during August?",
+      "expectedTool": "search_orders",
+      "category": "order",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel order 1024",
+      "expectedTool": "cancel_order",
+      "category": "order",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Stop my purchase before the warehouse ships it",
+      "expectedTool": "cancel_order",
+      "category": "order",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update the address on order 1024",
+      "expectedTool": "update_order",
+      "category": "order",
+      "difficulty": "easy"
+    },
+    {
+      "query": "I typed the wrong delivery address on my recent purchase",
+      "expectedTool": "update_order",
+      "category": "order",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Delete order record 1024",
+      "expectedTool": "delete_order",
+      "category": "order",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Remove this purchase record from storage entirely",
+      "expectedTool": "delete_order",
+      "category": "order",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Check payment 1024",
+      "expectedTool": "get_payment",
+      "category": "payment",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Did the card charge for my purchase go through?",
+      "expectedTool": "get_payment",
+      "category": "payment",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List payments from last week",
+      "expectedTool": "search_payments",
+      "category": "payment",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Show every card charge made by this customer in June",
+      "expectedTool": "search_payments",
+      "category": "payment",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Refund payment 1024",
+      "expectedTool": "refund_payment",
+      "category": "payment",
+      "difficulty": "easy"
+    },
+    {
+      "query": "The customer was charged twice; send the extra money back",
+      "expectedTool": "refund_payment",
+      "category": "payment",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel pending payment 1024",
+      "expectedTool": "cancel_payment",
+      "category": "payment",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Void the card authorization before it settles",
+      "expectedTool": "cancel_payment",
+      "category": "payment",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Capture payment 1024",
+      "expectedTool": "capture_payment",
+      "category": "payment",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Finalize the preauthorized card charge now",
+      "expectedTool": "capture_payment",
+      "category": "payment",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Send an email to Ana",
+      "expectedTool": "send_email",
+      "category": "email",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Deliver this message to the client now",
+      "expectedTool": "send_email",
+      "category": "email",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Draft an email to Ana",
+      "expectedTool": "draft_email",
+      "category": "email",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Write this note but leave it in my outbox for review",
+      "expectedTool": "draft_email",
+      "category": "email",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search email from Ana",
+      "expectedTool": "search_email",
+      "category": "email",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Find the message the supplier sent last Tuesday",
+      "expectedTool": "search_email",
+      "category": "email",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Delete email 1024",
+      "expectedTool": "delete_email",
+      "category": "email",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Move that unwanted message into the trash",
+      "expectedTool": "delete_email",
+      "category": "email",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Archive email 1024",
+      "expectedTool": "archive_email",
+      "category": "email",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Clear this message from my inbox but keep it searchable",
+      "expectedTool": "archive_email",
+      "category": "email",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show calendar event 1024",
+      "expectedTool": "get_event",
+      "category": "calendar",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What time and room is tomorrow's team meeting?",
+      "expectedTool": "get_event",
+      "category": "calendar",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List events next week",
+      "expectedTool": "search_events",
+      "category": "calendar",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What meetings do I have on Friday afternoon?",
+      "expectedTool": "search_events",
+      "category": "calendar",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create a meeting tomorrow",
+      "expectedTool": "create_event",
+      "category": "calendar",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Put a planning session on everyone's calendar",
+      "expectedTool": "create_event",
+      "category": "calendar",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Reschedule event 1024",
+      "expectedTool": "update_event",
+      "category": "calendar",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Move the standup from nine to ten",
+      "expectedTool": "update_event",
+      "category": "calendar",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel event 1024",
+      "expectedTool": "cancel_event",
+      "category": "calendar",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Call off tomorrow's meeting for all attendees",
+      "expectedTool": "cancel_event",
+      "category": "calendar",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Current weather in Paris",
+      "expectedTool": "get_weather",
+      "category": "weather",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Is it raining outside in Berlin right now?",
+      "expectedTool": "get_weather",
+      "category": "weather",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Forecast weather tomorrow",
+      "expectedTool": "weather_forecast",
+      "category": "weather",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Will I need a coat this weekend in Oslo?",
+      "expectedTool": "weather_forecast",
+      "category": "weather",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Weather history for Monday",
+      "expectedTool": "weather_history",
+      "category": "weather",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How much rain fell in London last April?",
+      "expectedTool": "weather_history",
+      "category": "weather",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Find weather location for Paris",
+      "expectedTool": "search_location",
+      "category": "weather",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which Paris does the forecast service mean?",
+      "expectedTool": "search_location",
+      "category": "weather",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get city details for Paris",
+      "expectedTool": "get_city",
+      "category": "weather",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What time zone and coordinates does Oslo have?",
+      "expectedTool": "get_city",
+      "category": "weather",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search flights to Tokyo",
+      "expectedTool": "search_flights",
+      "category": "travel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which planes can take me from Boston to Tokyo Friday?",
+      "expectedTool": "search_flights",
+      "category": "travel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Book flight 1024",
+      "expectedTool": "book_flight",
+      "category": "travel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Buy a seat on the morning plane to Tokyo",
+      "expectedTool": "book_flight",
+      "category": "travel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel flight booking 1024",
+      "expectedTool": "cancel_flight",
+      "category": "travel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "I can no longer take the flight I reserved",
+      "expectedTool": "cancel_flight",
+      "category": "travel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show trip itinerary 1024",
+      "expectedTool": "get_itinerary",
+      "category": "travel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What connections are in my booked trip?",
+      "expectedTool": "get_itinerary",
+      "category": "travel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Check flight status AB123",
+      "expectedTool": "check_flight_status",
+      "category": "travel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Has my plane departed yet or is it delayed?",
+      "expectedTool": "check_flight_status",
+      "category": "travel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search hotels in Rome",
+      "expectedTool": "search_hotels",
+      "category": "hotel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Where can I stay near the station next weekend?",
+      "expectedTool": "search_hotels",
+      "category": "hotel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Book hotel room 1024",
+      "expectedTool": "book_hotel",
+      "category": "hotel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Hold a double room for my Rome trip",
+      "expectedTool": "book_hotel",
+      "category": "hotel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel hotel booking 1024",
+      "expectedTool": "cancel_hotel",
+      "category": "hotel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "I will not stay there after all; release my room",
+      "expectedTool": "cancel_hotel",
+      "category": "hotel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show hotel booking 1024",
+      "expectedTool": "get_hotel_booking",
+      "category": "hotel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What room type did I reserve for my stay?",
+      "expectedTool": "get_hotel_booking",
+      "category": "hotel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Modify hotel booking 1024",
+      "expectedTool": "modify_hotel_booking",
+      "category": "hotel",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Extend my stay by one night",
+      "expectedTool": "modify_hotel_booking",
+      "category": "hotel",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Open file report.pdf",
+      "expectedTool": "get_file",
+      "category": "file",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Show me what is inside the budget document",
+      "expectedTool": "get_file",
+      "category": "file",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search files named budget",
+      "expectedTool": "search_files",
+      "category": "file",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which documents contain the quarterly report title?",
+      "expectedTool": "search_files",
+      "category": "file",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Upload file report.pdf",
+      "expectedTool": "upload_file",
+      "category": "file",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Put this local document into cloud storage",
+      "expectedTool": "upload_file",
+      "category": "file",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Delete file report.pdf",
+      "expectedTool": "delete_file",
+      "category": "file",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Erase the old budget document from storage",
+      "expectedTool": "delete_file",
+      "category": "file",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Move file report.pdf",
+      "expectedTool": "move_file",
+      "category": "file",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Place this document in the finance folder",
+      "expectedTool": "move_file",
+      "category": "file",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Run SQL query on users",
+      "expectedTool": "run_query",
+      "category": "database",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Count rows matching this SQL select statement",
+      "expectedTool": "run_query",
+      "category": "database",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show schema for users table",
+      "expectedTool": "get_table_schema",
+      "category": "database",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What columns and types does the orders table have?",
+      "expectedTool": "get_table_schema",
+      "category": "database",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Insert row into users",
+      "expectedTool": "insert_row",
+      "category": "database",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Add a new customer record to the table",
+      "expectedTool": "insert_row",
+      "category": "database",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update row in users",
+      "expectedTool": "update_row",
+      "category": "database",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Change the email field on this customer record",
+      "expectedTool": "update_row",
+      "category": "database",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Delete row from users",
+      "expectedTool": "delete_row",
+      "category": "database",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Permanently remove this customer record",
+      "expectedTool": "delete_row",
+      "category": "database",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show GitHub issue 1024",
+      "expectedTool": "get_issue",
+      "category": "github",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What did maintainers discuss on bug 1024?",
+      "expectedTool": "get_issue",
+      "category": "github",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search GitHub issues for crash",
+      "expectedTool": "search_issues",
+      "category": "github",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which open bugs mention a timeout?",
+      "expectedTool": "search_issues",
+      "category": "github",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create GitHub issue",
+      "expectedTool": "create_issue",
+      "category": "github",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Report this reproducible bug in the repository",
+      "expectedTool": "create_issue",
+      "category": "github",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Close GitHub issue 1024",
+      "expectedTool": "close_issue",
+      "category": "github",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Mark this resolved bug as closed",
+      "expectedTool": "close_issue",
+      "category": "github",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create pull request",
+      "expectedTool": "create_pull_request",
+      "category": "github",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Submit my feature branch for code review",
+      "expectedTool": "create_pull_request",
+      "category": "github",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get user 1024",
+      "expectedTool": "get_user",
+      "category": "user",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What name and email are on this account?",
+      "expectedTool": "get_user",
+      "category": "user",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search users named Ana",
+      "expectedTool": "search_users",
+      "category": "user",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which accounts were created last month?",
+      "expectedTool": "search_users",
+      "category": "user",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create user Ana",
+      "expectedTool": "create_user",
+      "category": "user",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Sign up a new customer with this email",
+      "expectedTool": "create_user",
+      "category": "user",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update user 1024",
+      "expectedTool": "update_user",
+      "category": "user",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Correct the display name on my profile",
+      "expectedTool": "update_user",
+      "category": "user",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Deactivate user 1024",
+      "expectedTool": "deactivate_user",
+      "category": "user",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Prevent this former employee from signing in",
+      "expectedTool": "deactivate_user",
+      "category": "user",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Send notification to Ana",
+      "expectedTool": "send_notification",
+      "category": "notification",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Alert the on call engineer right away",
+      "expectedTool": "send_notification",
+      "category": "notification",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Schedule notification tomorrow",
+      "expectedTool": "schedule_notification",
+      "category": "notification",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Remind the team next Monday morning",
+      "expectedTool": "schedule_notification",
+      "category": "notification",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get notification 1024",
+      "expectedTool": "get_notification",
+      "category": "notification",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Was the alert delivered to the recipient?",
+      "expectedTool": "get_notification",
+      "category": "notification",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List notifications for Ana",
+      "expectedTool": "list_notifications",
+      "category": "notification",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What alerts has this account received today?",
+      "expectedTool": "list_notifications",
+      "category": "notification",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel notification 1024",
+      "expectedTool": "cancel_notification",
+      "category": "notification",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Do not send the reminder that is waiting in the queue",
+      "expectedTool": "cancel_notification",
+      "category": "notification",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search the web for Java 21",
+      "expectedTool": "web_search",
+      "category": "search",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Find public articles about virtual threads",
+      "expectedTool": "web_search",
+      "category": "search",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search images of cats",
+      "expectedTool": "image_search",
+      "category": "search",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Find photographs of coastal cliffs",
+      "expectedTool": "image_search",
+      "category": "search",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search news about satellites",
+      "expectedTool": "news_search",
+      "category": "search",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What articles reported the launch this morning?",
+      "expectedTool": "news_search",
+      "category": "search",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search products for headphones",
+      "expectedTool": "product_search",
+      "category": "search",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which noise cancelling headsets are in the catalog?",
+      "expectedTool": "product_search",
+      "category": "search",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search knowledge base for VPN",
+      "expectedTool": "knowledge_search",
+      "category": "search",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Find the company guide to setting up remote access",
+      "expectedTool": "knowledge_search",
+      "category": "search",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create a project document",
+      "expectedTool": "create_document",
+      "category": "document",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Start a blank proposal for the team",
+      "expectedTool": "create_document",
+      "category": "document",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Open document 1024",
+      "expectedTool": "get_document",
+      "category": "document",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What does the signed agreement say?",
+      "expectedTool": "get_document",
+      "category": "document",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update document 1024",
+      "expectedTool": "update_document",
+      "category": "document",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Change the second paragraph of the proposal",
+      "expectedTool": "update_document",
+      "category": "document",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Summarize document 1024",
+      "expectedTool": "summarize_document",
+      "category": "document",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Give me the main points of this long contract",
+      "expectedTool": "summarize_document",
+      "category": "document",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Export document 1024 as PDF",
+      "expectedTool": "export_document",
+      "category": "document",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Make a downloadable PDF of the proposal",
+      "expectedTool": "export_document",
+      "category": "document",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get revenue metric",
+      "expectedTool": "get_metric",
+      "category": "analytics",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What is today's conversion rate?",
+      "expectedTool": "get_metric",
+      "category": "analytics",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Run sales report for August",
+      "expectedTool": "run_report",
+      "category": "analytics",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Break down revenue by region for last quarter",
+      "expectedTool": "run_report",
+      "category": "analytics",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create revenue dashboard",
+      "expectedTool": "create_dashboard",
+      "category": "analytics",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Build a view with sales and conversion charts",
+      "expectedTool": "create_dashboard",
+      "category": "analytics",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Show dashboard 1024",
+      "expectedTool": "get_dashboard",
+      "category": "analytics",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Open the executive metrics view",
+      "expectedTool": "get_dashboard",
+      "category": "analytics",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Export report 1024",
+      "expectedTool": "export_report",
+      "category": "analytics",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Give me a CSV copy of last month's analysis",
+      "expectedTool": "export_report",
+      "category": "analytics",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get stock for SKU 1024",
+      "expectedTool": "get_stock",
+      "category": "inventory",
+      "difficulty": "easy"
+    },
+    {
+      "query": "How many blue shirts are left in the warehouse?",
+      "expectedTool": "get_stock",
+      "category": "inventory",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search inventory for shirts",
+      "expectedTool": "search_inventory",
+      "category": "inventory",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which products are running low in warehouse B?",
+      "expectedTool": "search_inventory",
+      "category": "inventory",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Reserve stock for SKU 1024",
+      "expectedTool": "reserve_stock",
+      "category": "inventory",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Set aside three units for this customer's cart",
+      "expectedTool": "reserve_stock",
+      "category": "inventory",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Release stock reservation 1024",
+      "expectedTool": "release_stock",
+      "category": "inventory",
+      "difficulty": "easy"
+    },
+    {
+      "query": "The cart expired; make its held units available again",
+      "expectedTool": "release_stock",
+      "category": "inventory",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Adjust stock for SKU 1024",
+      "expectedTool": "adjust_stock",
+      "category": "inventory",
+      "difficulty": "easy"
+    },
+    {
+      "query": "The physical count is two lower than the system says",
+      "expectedTool": "adjust_stock",
+      "category": "inventory",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get shipment 1024",
+      "expectedTool": "get_shipment",
+      "category": "shipping",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Where is my package right now?",
+      "expectedTool": "get_shipment",
+      "category": "shipping",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create shipment for order 1024",
+      "expectedTool": "create_shipment",
+      "category": "shipping",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Prepare a package label for this purchase",
+      "expectedTool": "create_shipment",
+      "category": "shipping",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Cancel shipment 1024",
+      "expectedTool": "cancel_shipment",
+      "category": "shipping",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Stop the parcel before the courier collects it",
+      "expectedTool": "cancel_shipment",
+      "category": "shipping",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update delivery address for shipment 1024",
+      "expectedTool": "update_delivery_address",
+      "category": "shipping",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Send my parcel to the office instead of home",
+      "expectedTool": "update_delivery_address",
+      "category": "shipping",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List shipments for order 1024",
+      "expectedTool": "list_shipments",
+      "category": "shipping",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which parcels were sent for this customer's purchases?",
+      "expectedTool": "list_shipments",
+      "category": "shipping",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get support ticket 1024",
+      "expectedTool": "get_ticket",
+      "category": "support",
+      "difficulty": "easy"
+    },
+    {
+      "query": "What did the customer say in their complaint?",
+      "expectedTool": "get_ticket",
+      "category": "support",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search tickets about login",
+      "expectedTool": "search_tickets",
+      "category": "support",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which unresolved complaints mention a password reset?",
+      "expectedTool": "search_tickets",
+      "category": "support",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create support ticket",
+      "expectedTool": "create_ticket",
+      "category": "support",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Log this customer's complaint for the help desk",
+      "expectedTool": "create_ticket",
+      "category": "support",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Assign ticket 1024 to Ana",
+      "expectedTool": "assign_ticket",
+      "category": "support",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Give this case to the billing specialist",
+      "expectedTool": "assign_ticket",
+      "category": "support",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Close ticket 1024",
+      "expectedTool": "close_ticket",
+      "category": "support",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Mark the customer's issue as resolved",
+      "expectedTool": "close_ticket",
+      "category": "support",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Get task 1024",
+      "expectedTool": "get_task",
+      "category": "task",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Who owns the migration task and when is it due?",
+      "expectedTool": "get_task",
+      "category": "task",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Search tasks due today",
+      "expectedTool": "search_tasks",
+      "category": "task",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Which engineering items are still open?",
+      "expectedTool": "search_tasks",
+      "category": "task",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Create task for migration",
+      "expectedTool": "create_task",
+      "category": "task",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Add a follow up item to the sprint backlog",
+      "expectedTool": "create_task",
+      "category": "task",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Update task 1024",
+      "expectedTool": "update_task",
+      "category": "task",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Push the due date of this work item to Friday",
+      "expectedTool": "update_task",
+      "category": "task",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Complete task 1024",
+      "expectedTool": "complete_task",
+      "category": "task",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Mark the migration work as done",
+      "expectedTool": "complete_task",
+      "category": "task",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Check permission for user 1024",
+      "expectedTool": "check_permission",
+      "category": "security",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Can this account edit the billing settings?",
+      "expectedTool": "check_permission",
+      "category": "security",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Grant edit permission to Ana",
+      "expectedTool": "grant_permission",
+      "category": "security",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Allow this teammate to modify billing settings",
+      "expectedTool": "grant_permission",
+      "category": "security",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Revoke edit permission from Ana",
+      "expectedTool": "revoke_permission",
+      "category": "security",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Take away this account's billing access",
+      "expectedTool": "revoke_permission",
+      "category": "security",
+      "difficulty": "hard"
+    },
+    {
+      "query": "List audit events for user 1024",
+      "expectedTool": "list_audit_events",
+      "category": "security",
+      "difficulty": "easy"
+    },
+    {
+      "query": "Who changed the access rules yesterday?",
+      "expectedTool": "list_audit_events",
+      "category": "security",
+      "difficulty": "hard"
+    },
+    {
+      "query": "Rotate API key 1024",
+      "expectedTool": "rotate_api_key",
+      "category": "security",
+      "difficulty": "easy"
+    },
+    {
+      "query": "The credential may be exposed; issue a replacement",
+      "expectedTool": "rotate_api_key",
+      "category": "security",
+      "difficulty": "hard"
+    }
+  ]
+}

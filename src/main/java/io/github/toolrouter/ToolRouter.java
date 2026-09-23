@@ -18,4 +18,3 @@ public interface ToolRouter {
         return new RouteResponse(results, gap, first <= 0 || gap < 0.1);
     }
 }
-
