@@ -26,7 +26,8 @@ public final class VectorToolRouter implements ToolRouter {
     }
 
     private Index current(InMemoryToolRegistry.Snapshot snapshot) {
-        if (index.version() == snapshot.version()) return index;
+        Index observed = index;
+        if (observed.version() == snapshot.version()) return observed;
         return rebuild(snapshot);
     }
 
@@ -38,8 +39,9 @@ public final class VectorToolRouter implements ToolRouter {
         if (vectors.size() != tools.size()) throw new IllegalStateException("Embedding count mismatch");
         List<Entry> entries = new ArrayList<>();
         for (int i = 0; i < tools.size(); i++) entries.add(new Entry(tools.get(i), vectors.get(i).clone()));
-        index = new Index(snapshot.version(), List.copyOf(entries));
-        return index;
+        Index built = new Index(snapshot.version(), List.copyOf(entries));
+        if (snapshot.version() > index.version()) index = built;
+        return built;
     }
 
     /** Cosine similarity with dimension and finite-value validation. */
