@@ -1,6 +1,5 @@
 package io.github.toolrouter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,26 +18,24 @@ public final class Benchmark {
     record Metrics(double r1, double r3, double r5, double mrr, double p50, double p95) {}
 
     private static Dataset load(Path path) throws IOException {
-        var root = new ObjectMapper().readTree(Files.readString(path));
         List<ToolDefinition> tools = new ArrayList<>();
         List<Case> queries = new ArrayList<>();
         Set<String> names = new HashSet<>();
-        for (var item : root.path("tools")) {
-            List<String> tags = new ArrayList<>();
-            item.path("tags").forEach(tag -> tags.add(tag.asText()));
-            ToolDefinition tool = new ToolDefinition(item.path("name").asText(),
-                item.path("description").asText(), tags, item.path("inputSchema"));
+        List<String> lines = Files.readAllLines(path);
+        if (lines.isEmpty() || !lines.get(0).equals("category|name|description|tags|easy|hard")) {
+            throw new IllegalArgumentException("Invalid benchmark header");
+        }
+        for (String line : lines.subList(1, lines.size())) {
+            String[] fields = line.split("\\|", -1);
+            if (fields.length != 6 || Arrays.stream(fields).anyMatch(String::isBlank)) {
+                throw new IllegalArgumentException("Invalid benchmark row");
+            }
+            ToolDefinition tool = new ToolDefinition(fields[1], fields[2],
+                List.of(fields[3].split(" ")), null);
             if (!names.add(tool.name())) throw new IllegalArgumentException("Duplicate dataset tool");
             tools.add(tool);
-        }
-        for (var item : root.path("queries")) {
-            Case test = new Case(item.path("query").asText(), item.path("expectedTool").asText(),
-                item.path("category").asText(), item.path("difficulty").asText());
-            if (test.query().isBlank() || !names.contains(test.expectedTool())
-                || test.category().isBlank() || test.difficulty().isBlank()) {
-                throw new IllegalArgumentException("Invalid benchmark query");
-            }
-            queries.add(test);
+            queries.add(new Case(fields[4], tool.name(), fields[0], "easy"));
+            queries.add(new Case(fields[5], tool.name(), fields[0], "hard"));
         }
         return new Dataset(List.copyOf(tools), List.copyOf(queries));
     }
@@ -76,7 +73,7 @@ public final class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        Dataset data = load(Path.of("benchmark/dataset.json"));
+        Dataset data = load(Path.of("benchmark/dataset.tsv"));
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         data.tools().forEach(registry::register);
         List<Case> hard = data.queries().stream().filter(c -> c.difficulty().equals("hard")).toList();

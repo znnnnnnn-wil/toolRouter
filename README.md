@@ -72,7 +72,7 @@ The default URL remains supported, but Alibaba Cloud recommends a workspace-spec
 
 ## Benchmark
 
-`benchmark/dataset.json` contains 100 tools and 200 labeled queries in 20 domains, with one keyword-oriented and one natural-language hard query per tool. Similar actions within a domain serve as hard negatives. The reviewable source is `benchmark/dataset.tsv`; `python benchmark/build_dataset.py` recreates the JSON. There is no training step or dataset-specific routing rule. This manually authored diagnostic set is small and English-only; it should not be treated as a general accuracy claim.
+`benchmark/dataset.tsv` contains 100 tools and 200 labeled queries in 20 domains, with one keyword-oriented and one natural-language hard query per tool. Similar actions within a domain serve as hard negatives. The benchmark reads the TSV directly; `python benchmark/build_dataset.py` can export an ignored JSON copy. There is no training step or dataset-specific routing rule. This manually authored diagnostic set is small and English-only; it should not be treated as a general accuracy claim.
 
 ```bash
 mvn -q exec:java -Dexec.mainClass=io.github.toolrouter.Benchmark -Dexec.args=--scaling
