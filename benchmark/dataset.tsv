@@ -1,0 +1,101 @@
+category|name|description|tags|easy|hard
+order|get_order|Get the status and details of one existing order|order status details|Show the status of order 1024|Where is the purchase I made yesterday in its lifecycle?
+order|search_orders|Find multiple orders matching customer and date filters|order search list|List all orders placed last week|Which purchases did this customer make during August?
+order|cancel_order|Cancel an order before fulfillment|order cancel fulfillment|Cancel order 1024|Stop my purchase before the warehouse ships it
+order|update_order|Change shipping address or notes on an open order|order update address|Update the address on order 1024|I typed the wrong delivery address on my recent purchase
+order|delete_order|Permanently delete an order record|order delete record|Delete order record 1024|Remove this purchase record from storage entirely
+payment|get_payment|Get payment transaction status and amount|payment status transaction|Check payment 1024|Did the card charge for my purchase go through?
+payment|search_payments|Find payment transactions by date or customer|payment search transactions|List payments from last week|Show every card charge made by this customer in June
+payment|refund_payment|Return money from a captured payment|payment refund money|Refund payment 1024|The customer was charged twice; send the extra money back
+payment|cancel_payment|Void an authorized but uncaptured payment|payment cancel authorization|Cancel pending payment 1024|Void the card authorization before it settles
+payment|capture_payment|Capture an authorized payment|payment capture settlement|Capture payment 1024|Finalize the preauthorized card charge now
+email|send_email|Send a composed email message immediately|email send message|Send an email to Ana|Deliver this message to the client now
+email|draft_email|Create an unsent email draft|email draft compose|Draft an email to Ana|Write this note but leave it in my outbox for review
+email|search_email|Find email messages in a mailbox|email search inbox|Search email from Ana|Find the message the supplier sent last Tuesday
+email|delete_email|Delete an email message|email delete trash|Delete email 1024|Move that unwanted message into the trash
+email|archive_email|Archive an email without deleting it|email archive inbox|Archive email 1024|Clear this message from my inbox but keep it searchable
+calendar|get_event|Read one calendar event and its attendees|calendar event details|Show calendar event 1024|What time and room is tomorrow's team meeting?
+calendar|search_events|Find calendar events within a time window|calendar search schedule|List events next week|What meetings do I have on Friday afternoon?
+calendar|create_event|Schedule a new calendar event|calendar create meeting|Create a meeting tomorrow|Put a planning session on everyone's calendar
+calendar|update_event|Change the time or details of a calendar event|calendar update reschedule|Reschedule event 1024|Move the standup from nine to ten
+calendar|cancel_event|Cancel a scheduled event and notify attendees|calendar cancel meeting|Cancel event 1024|Call off tomorrow's meeting for all attendees
+weather|get_weather|Get current weather conditions for a place|weather current conditions|Current weather in Paris|Is it raining outside in Berlin right now?
+weather|weather_forecast|Get predicted weather for future dates|weather forecast future|Forecast weather tomorrow|Will I need a coat this weekend in Oslo?
+weather|weather_history|Read observed weather on a past date|weather history past|Weather history for Monday|How much rain fell in London last April?
+weather|search_location|Resolve a place name to weather location identifiers|weather location search|Find weather location for Paris|Which Paris does the forecast service mean?
+weather|get_city|Read city metadata such as timezone and coordinates|city location metadata|Get city details for Paris|What time zone and coordinates does Oslo have?
+travel|search_flights|Find available flights for a route and date|travel flight search|Search flights to Tokyo|Which planes can take me from Boston to Tokyo Friday?
+travel|book_flight|Reserve a selected flight itinerary|travel flight book|Book flight 1024|Buy a seat on the morning plane to Tokyo
+travel|cancel_flight|Cancel an existing flight reservation|travel flight cancel|Cancel flight booking 1024|I can no longer take the flight I reserved
+travel|get_itinerary|Read booked travel itinerary and segments|travel itinerary details|Show trip itinerary 1024|What connections are in my booked trip?
+travel|check_flight_status|Get live departure or arrival status of a flight|travel flight status|Check flight status AB123|Has my plane departed yet or is it delayed?
+hotel|search_hotels|Find hotels by city and dates|hotel search availability|Search hotels in Rome|Where can I stay near the station next weekend?
+hotel|book_hotel|Reserve a hotel room|hotel book reservation|Book hotel room 1024|Hold a double room for my Rome trip
+hotel|cancel_hotel|Cancel a hotel reservation|hotel cancel booking|Cancel hotel booking 1024|I will not stay there after all; release my room
+hotel|get_hotel_booking|Read details of an existing hotel booking|hotel booking details|Show hotel booking 1024|What room type did I reserve for my stay?
+hotel|modify_hotel_booking|Change dates or room type of an existing booking|hotel booking modify|Modify hotel booking 1024|Extend my stay by one night
+file|get_file|Read content and metadata of a file|file read content|Open file report.pdf|Show me what is inside the budget document
+file|search_files|Find files by name or metadata|file search list|Search files named budget|Which documents contain the quarterly report title?
+file|upload_file|Upload a new file|file upload create|Upload file report.pdf|Put this local document into cloud storage
+file|delete_file|Remove a file from storage|file delete remove|Delete file report.pdf|Erase the old budget document from storage
+file|move_file|Relocate a file to another folder|file move folder|Move file report.pdf|Place this document in the finance folder
+database|run_query|Execute a read only SQL query|database sql select|Run SQL query on users|Count rows matching this SQL select statement
+database|get_table_schema|Inspect columns and types of a database table|database schema columns|Show schema for users table|What columns and types does the orders table have?
+database|insert_row|Add a new row to a database table|database insert row|Insert row into users|Add a new customer record to the table
+database|update_row|Modify an existing database row|database update row|Update row in users|Change the email field on this customer record
+database|delete_row|Remove an existing database row|database delete row|Delete row from users|Permanently remove this customer record
+github|get_issue|Read a GitHub issue and its comments|github issue read|Show GitHub issue 1024|What did maintainers discuss on bug 1024?
+github|search_issues|Find GitHub issues by repository and filters|github issue search|Search GitHub issues for crash|Which open bugs mention a timeout?
+github|create_issue|Open a new GitHub issue|github issue create|Create GitHub issue|Report this reproducible bug in the repository
+github|close_issue|Close an existing GitHub issue|github issue close|Close GitHub issue 1024|Mark this resolved bug as closed
+github|create_pull_request|Open a pull request from a branch|github pull request create|Create pull request|Submit my feature branch for code review
+user|get_user|Read a user profile|user account profile|Get user 1024|What name and email are on this account?
+user|search_users|Find user accounts by criteria|user account search|Search users named Ana|Which accounts were created last month?
+user|create_user|Create a new user account|user account create|Create user Ana|Sign up a new customer with this email
+user|update_user|Change a user profile|user account update|Update user 1024|Correct the display name on my profile
+user|deactivate_user|Disable an account without deleting it|user account deactivate|Deactivate user 1024|Prevent this former employee from signing in
+notification|send_notification|Send an immediate app notification|notification send push|Send notification to Ana|Alert the on call engineer right away
+notification|schedule_notification|Queue a notification for later delivery|notification schedule later|Schedule notification tomorrow|Remind the team next Monday morning
+notification|get_notification|Read notification delivery status|notification status details|Get notification 1024|Was the alert delivered to the recipient?
+notification|list_notifications|List notifications for a user|notification list history|List notifications for Ana|What alerts has this account received today?
+notification|cancel_notification|Cancel a queued notification|notification cancel scheduled|Cancel notification 1024|Do not send the reminder that is waiting in the queue
+search|web_search|Search public web pages|search web internet|Search the web for Java 21|Find public articles about virtual threads
+search|image_search|Find images on the public web|search image pictures|Search images of cats|Find photographs of coastal cliffs
+search|news_search|Find news articles by topic|search news articles|Search news about satellites|What articles reported the launch this morning?
+search|product_search|Find catalog products by keywords|search product catalog|Search products for headphones|Which noise cancelling headsets are in the catalog?
+search|knowledge_search|Search internal knowledge base articles|search knowledge internal|Search knowledge base for VPN|Find the company guide to setting up remote access
+document|create_document|Create a new editable document|document create text|Create a project document|Start a blank proposal for the team
+document|get_document|Read an existing document|document read content|Open document 1024|What does the signed agreement say?
+document|update_document|Edit content of an existing document|document update edit|Update document 1024|Change the second paragraph of the proposal
+document|summarize_document|Produce a summary of document content|document summarize abstract|Summarize document 1024|Give me the main points of this long contract
+document|export_document|Convert a document to PDF or another format|document export convert|Export document 1024 as PDF|Make a downloadable PDF of the proposal
+analytics|get_metric|Read the current value of one metric|analytics metric value|Get revenue metric|What is today's conversion rate?
+analytics|run_report|Generate an analytics report over a period|analytics report generate|Run sales report for August|Break down revenue by region for last quarter
+analytics|create_dashboard|Create an analytics dashboard|analytics dashboard create|Create revenue dashboard|Build a view with sales and conversion charts
+analytics|get_dashboard|Read an existing analytics dashboard|analytics dashboard read|Show dashboard 1024|Open the executive metrics view
+analytics|export_report|Download a generated report|analytics report export|Export report 1024|Give me a CSV copy of last month's analysis
+inventory|get_stock|Read available quantity of a product|inventory stock quantity|Get stock for SKU 1024|How many blue shirts are left in the warehouse?
+inventory|search_inventory|Find inventory items by filters|inventory search items|Search inventory for shirts|Which products are running low in warehouse B?
+inventory|reserve_stock|Hold units for an order|inventory reserve stock|Reserve stock for SKU 1024|Set aside three units for this customer's cart
+inventory|release_stock|Return reserved units to available stock|inventory release stock|Release stock reservation 1024|The cart expired; make its held units available again
+inventory|adjust_stock|Correct recorded stock quantity|inventory adjust quantity|Adjust stock for SKU 1024|The physical count is two lower than the system says
+shipping|get_shipment|Read shipment tracking and status|shipping shipment tracking|Get shipment 1024|Where is my package right now?
+shipping|create_shipment|Create a new shipment for an order|shipping shipment create|Create shipment for order 1024|Prepare a package label for this purchase
+shipping|cancel_shipment|Cancel a shipment before pickup|shipping shipment cancel|Cancel shipment 1024|Stop the parcel before the courier collects it
+shipping|update_delivery_address|Change a shipment destination address|shipping delivery address|Update delivery address for shipment 1024|Send my parcel to the office instead of home
+shipping|list_shipments|Find multiple shipments for an order or customer|shipping shipment list|List shipments for order 1024|Which parcels were sent for this customer's purchases?
+support|get_ticket|Read one customer support ticket|support ticket details|Get support ticket 1024|What did the customer say in their complaint?
+support|search_tickets|Find support tickets by filters|support ticket search|Search tickets about login|Which unresolved complaints mention a password reset?
+support|create_ticket|Open a new support ticket|support ticket create|Create support ticket|Log this customer's complaint for the help desk
+support|assign_ticket|Assign a support ticket to an agent|support ticket assign|Assign ticket 1024 to Ana|Give this case to the billing specialist
+support|close_ticket|Close a resolved support ticket|support ticket close|Close ticket 1024|Mark the customer's issue as resolved
+task|get_task|Read details of one work task|task read details|Get task 1024|Who owns the migration task and when is it due?
+task|search_tasks|Find tasks by project or status|task search list|Search tasks due today|Which engineering items are still open?
+task|create_task|Create a work task|task create work|Create task for migration|Add a follow up item to the sprint backlog
+task|update_task|Change task description or due date|task update edit|Update task 1024|Push the due date of this work item to Friday
+task|complete_task|Mark a work task finished|task complete done|Complete task 1024|Mark the migration work as done
+security|check_permission|Check whether a user may perform an action|security permission authorize|Check permission for user 1024|Can this account edit the billing settings?
+security|grant_permission|Give a user a permission|security permission grant|Grant edit permission to Ana|Allow this teammate to modify billing settings
+security|revoke_permission|Remove a permission from a user|security permission revoke|Revoke edit permission from Ana|Take away this account's billing access
+security|list_audit_events|Read security audit events|security audit events|List audit events for user 1024|Who changed the access rules yesterday?
+security|rotate_api_key|Replace an API key with a new secret|security api key rotate|Rotate API key 1024|The credential may be exposed; issue a replacement
