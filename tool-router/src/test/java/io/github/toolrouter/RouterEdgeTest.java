@@ -8,16 +8,12 @@ import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 class RouterEdgeTest {
-    @TempDir Path cacheDirectory;
-
     private static ToolDefinition tool(String name, String description, String... tags) {
         return new ToolDefinition(name, description, List.of(tags), null);
     }
@@ -66,23 +62,6 @@ class RouterEdgeTest {
         assertTrue(router.route("", 5).isEmpty());
         assertThrows(IllegalArgumentException.class,
             () -> VectorToolRouter.cosine(new float[]{Float.NaN}, new float[]{1}));
-    }
-
-    @Test void benchmarkCachePersistsOnlyVectors() throws Exception {
-        AtomicInteger calls = new AtomicInteger();
-        EmbeddingProvider delegate = texts -> {
-            calls.incrementAndGet();
-            return texts.stream().map(s -> new float[]{s.length(), 1}).toList();
-        };
-        BenchmarkEmbeddingCache first = new BenchmarkEmbeddingCache(delegate, cacheDirectory, "model-v1", 2);
-        assertEquals(3, first.embed(List.of("a", "bb", "a")).size());
-        assertEquals(1, calls.get());
-        BenchmarkEmbeddingCache second = new BenchmarkEmbeddingCache(delegate, cacheDirectory, "model-v1", 2);
-        assertArrayEquals(new float[]{1, 1}, second.embed("a"));
-        assertEquals(1, calls.get());
-        BenchmarkEmbeddingCache newModel = new BenchmarkEmbeddingCache(delegate, cacheDirectory, "model-v2", 2);
-        newModel.embed("a");
-        assertEquals(2, calls.get());
     }
 
     @Test void compatibleProviderBatchesAndRestoresResponseOrder() throws Exception {

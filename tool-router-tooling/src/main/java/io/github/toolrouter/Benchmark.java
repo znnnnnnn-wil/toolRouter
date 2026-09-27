@@ -1,8 +1,11 @@
 package io.github.toolrouter;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,11 +21,16 @@ public final class Benchmark {
     record Metrics(double r1, double r3, double r5, double mrr, double p50, double p95) {}
     record Latency(double p50, double p95) {}
 
-    private static Dataset load(Path path) throws IOException {
+    private static Dataset load() throws IOException {
         List<ToolDefinition> tools = new ArrayList<>();
         List<Case> queries = new ArrayList<>();
         Set<String> names = new HashSet<>();
-        List<String> lines = Files.readAllLines(path);
+        List<String> lines;
+        InputStream resource = Benchmark.class.getResourceAsStream("/benchmark/dataset.tsv");
+        if (resource == null) throw new IllegalStateException("Missing benchmark dataset resource");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
+            lines = reader.lines().toList();
+        }
         if (lines.isEmpty() || !lines.get(0).equals("category|name|description|tags|easy|hard")) {
             throw new IllegalArgumentException("Invalid benchmark header");
         }
@@ -73,7 +81,7 @@ public final class Benchmark {
     }
 
     public static void main(String[] args) throws Exception {
-        Dataset data = load(Path.of("benchmark/dataset.tsv"));
+        Dataset data = load();
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         data.tools().forEach(registry::register);
         List<Case> hard = data.queries().stream().filter(c -> c.difficulty().equals("hard")).toList();
@@ -102,7 +110,8 @@ public final class Benchmark {
                 ? new OpenAiCompatibleEmbeddingProvider(baseUrl, key, model, dimensions)
                 : texts -> { throw new IllegalStateException("Missing real cached embedding; set DASHSCOPE_API_KEY"); };
             BenchmarkEmbeddingCache cache = new BenchmarkEmbeddingCache(remote,
-                Path.of(".benchmark-cache"), baseUrl + "\n" + model + "\n" + dimensions, dimensions);
+                Path.of(env("BENCHMARK_CACHE_DIR", ".benchmark-cache")),
+                baseUrl + "\n" + model + "\n" + dimensions, dimensions);
             // This precompute is intentionally excluded from the routing latency table.
             long precomputeStart = System.nanoTime();
             cache.embed(data.tools().stream().map(new ToolTextBuilder()::build).toList());

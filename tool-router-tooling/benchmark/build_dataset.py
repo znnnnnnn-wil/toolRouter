@@ -4,9 +4,10 @@ import json
 from pathlib import Path
 
 root = Path(__file__).parent
+dataset = root.parent / "src" / "main" / "resources" / "benchmark" / "dataset.tsv"
 tools = []
 queries = []
-with (root / "dataset.tsv").open(encoding="utf-8", newline="") as source:
+with dataset.open(encoding="utf-8", newline="") as source:
     for row in csv.DictReader(source, delimiter="|"):
         tools.append({"name": row["name"], "description": row["description"],
                       "tags": row["tags"].split(), "inputSchema": None})
