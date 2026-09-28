@@ -52,11 +52,11 @@ The default URL remains supported, but Alibaba Cloud recommends a workspace-spec
 
 **BM25:** Lucene indexes name, tags, and description as separate fields. Default weights are 1/1/1, avoiding an unevaluated field preference. Positive weights can be set in the constructor. The index is refreshed from a versioned registry snapshot after a mutation.
 
-**Embedding:** `EmbeddingProvider` is provider-agnostic and batch-oriented. `OpenAiCompatibleEmbeddingProvider` uses Java `HttpClient`, accepts base URL, API key, model, dimensions and batch size, and checks response dimensions and indices. Its default request timeout is 60 seconds, with up to two bounded retries for rate limits and transient server errors; an extended constructor makes these values configurable. For Alibaba Cloud V4 it sends `model`, `input`, `dimensions`, and `encoding_format=float` to `/embeddings` in chunks of at most 10. `VectorToolRouter` caches tool vectors for the registry version, scores cosine similarity, and keeps Top-K in a heap.
+**Embedding:** `EmbeddingProvider` is provider-agnostic and batch-oriented. `OpenAiCompatibleEmbeddingProvider` uses Java `HttpClient`, accepts base URL, API key, model, dimensions and batch size, and checks response dimensions and indices. Its default request timeout is 60 seconds, with up to two bounded retries for rate limits and transient server errors; an extended constructor makes these values configurable. For Alibaba Cloud V4 it sends `model`, `input`, `dimensions`, and `encoding_format=float` to `/embeddings` in chunks of at most 10. `VectorToolRouter` reuses vectors when a tool's retrieval text is unchanged, scores cosine similarity, and keeps Top-K in a heap.
 
 **Hybrid:** `HybridToolRouter` independently retrieves candidates from BM25 and embedding search, then computes `sum(1 / (rrfK + rank))` per tool. The default `rrfK` is 60 and candidate pool is 50; both are configurable. RRF combines ranks because BM25 and cosine scores have different scales. Fusion is optional: the [benchmark](docs/benchmark.md) shows that equal-rank fusion can hurt when one retriever is substantially weaker on the query set.
 
-**Score-gap hint:** `routeWithHint` returns the relative gap between the top two scores. It recommends fallback for fewer than two candidates, a nonpositive top score, or a gap below 0.1. This is a within-query heuristic, **not a calibrated probability or correctness estimate**. The threshold is a conservative example; callers should validate fallback policy on their own data. A fallback can expose more schemas to the agent.
+**Score-gap hint:** `routeWithHint` returns the relative gap between the top two scores. It retrieves two scores internally even when only one candidate is requested. It recommends fallback for fewer than two available candidates, a nonpositive top score, or a gap below 0.1. This is a within-query heuristic, **not a calibrated probability or correctness estimate**. The threshold is a conservative example; callers should validate fallback policy on their own data. A fallback can expose more schemas to the agent.
 
 ## Benchmark
 
@@ -64,7 +64,7 @@ The reviewable dataset is packaged with the tooling module, and its optional exp
 
 ## Limitations and roadmap
 
-The benchmark is small and English-only. Embedding calls incur provider cost and latency outside the hot-vector routing numbers. Delete `.benchmark-cache/` when changing a model behind the same alias to avoid stale vectors. Registry writes trigger full snapshot copies; BM25 reindexes on change and vector refresh re-embeds all tools. The score-gap hint is not calibrated. There is no persistence of registry metadata, tool execution, or automatic fallback. A useful next step is a held-out multilingual evaluation and an incremental index update path, while keeping this a library rather than an agent platform.
+The benchmark is small and English-only. Embedding calls incur provider cost and latency outside the hot-vector routing numbers. Delete `.benchmark-cache/` when changing a model behind the same alias to avoid stale vectors. Registry writes trigger full snapshot copies; BM25 reindexes on change, while vector refresh scans all tools but embeds only new or changed retrieval text. The score-gap hint is not calibrated. There is no persistence of registry metadata, tool execution, or automatic fallback. A useful next step is a held-out multilingual evaluation and an incremental BM25 index update path, while keeping this a library rather than an agent platform.
 
 ## Development and license
 

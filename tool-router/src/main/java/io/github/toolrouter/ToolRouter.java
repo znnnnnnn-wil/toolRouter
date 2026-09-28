@@ -7,14 +7,16 @@ public interface ToolRouter {
     List<RouteResult> route(String query, int topK);
 
     default RouteResponse routeWithHint(String query, int topK) {
-        List<RouteResult> results = route(query, topK);
-        if (results.isEmpty()) return new RouteResponse(results, 0, true);
-        if (results.size() == 1) return new RouteResponse(results, 0, true);
+        if (topK <= 0) return new RouteResponse(List.of(), 0, true);
+        List<RouteResult> ranked = route(query, Math.max(topK, 2));
+        List<RouteResult> candidates = ranked.size() > topK
+            ? ranked.subList(0, topK) : ranked;
+        if (ranked.size() < 2) return new RouteResponse(candidates, 0, true);
         // Scores differ between strategies. The rank gap is meaningful only when
         // both candidates come from the same router, and is advisory rather than calibrated.
-        double first = results.get(0).score();
-        double second = results.size() > 1 ? results.get(1).score() : 0;
+        double first = ranked.get(0).score();
+        double second = ranked.get(1).score();
         double gap = first <= 0 ? 0 : Math.max(0, (first - second) / first);
-        return new RouteResponse(results, gap, first <= 0 || gap < 0.1);
+        return new RouteResponse(candidates, gap, first <= 0 || gap < 0.1);
     }
 }

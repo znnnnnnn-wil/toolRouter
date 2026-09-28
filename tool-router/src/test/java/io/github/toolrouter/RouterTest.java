@@ -118,7 +118,29 @@ class RouterTest {
             start.countDown();
             writer.get();
             reader.get();
+            assertEquals("status", router.route("beta", 1).get(0).tool().name());
+            assertTrue(router.route("alpha", 1).isEmpty());
             pool.shutdown();
+        }
+    }
+
+    @Test void bm25DoesNotRestoreAnOlderSnapshot() throws Exception {
+        InMemoryToolRegistry registry = new InMemoryToolRegistry();
+        registry.register(tool("status", "alpha"));
+        InMemoryToolRegistry.Snapshot stale = registry.snapshot();
+        try (BM25ToolRouter router = new BM25ToolRouter(registry)) {
+            assertEquals("status", router.route("alpha", 1).get(0).tool().name());
+            registry.update(tool("status", "beta"));
+            assertEquals("status", router.route("beta", 1).get(0).tool().name());
+            var refresh = BM25ToolRouter.class.getDeclaredMethod(
+                "refresh", InMemoryToolRegistry.Snapshot.class);
+            refresh.setAccessible(true);
+            refresh.invoke(router, stale);
+            var version = BM25ToolRouter.class.getDeclaredField("indexedVersion");
+            version.setAccessible(true);
+            assertEquals(registry.snapshot().version(), version.getLong(router));
+            assertTrue(router.route("alpha", 1).isEmpty());
+            assertEquals("status", router.route("beta", 1).get(0).tool().name());
         }
     }
 }

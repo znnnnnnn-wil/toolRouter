@@ -39,8 +39,19 @@ class RouterEdgeTest {
         RouteResponse hint = uncertain.routeWithHint("x", 2);
         assertEquals(0.05, hint.scoreGapHint(), 1e-9);
         assertTrue(hint.fallbackRecommended());
-        ToolRouter separated = (q, k) -> List.of(new RouteResult(a, 10, 1), new RouteResult(b, 2, 2));
+        AtomicInteger requestedDepth = new AtomicInteger();
+        ToolRouter separated = (q, k) -> {
+            requestedDepth.set(k);
+            return List.of(new RouteResult(a, 10, 1), new RouteResult(b, 2, 2))
+                .subList(0, Math.min(k, 2));
+        };
         assertFalse(separated.routeWithHint("x", 2).fallbackRecommended());
+        RouteResponse topOne = separated.routeWithHint("x", 1);
+        assertEquals(2, requestedDepth.get());
+        assertEquals(1, topOne.candidates().size());
+        assertEquals(0.8, topOne.scoreGapHint(), 1e-9);
+        assertFalse(topOne.fallbackRecommended());
+        assertTrue(separated.routeWithHint("x", 0).candidates().isEmpty());
         ToolRouter one = (q, k) -> List.of(new RouteResult(a, 10, 1));
         assertTrue(one.routeWithHint("x", 2).fallbackRecommended());
         ToolRouter none = (q, k) -> List.of();

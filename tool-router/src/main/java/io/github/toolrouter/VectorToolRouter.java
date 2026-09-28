@@ -2,12 +2,14 @@ package io.github.toolrouter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 /** In-memory cosine retriever; O(ND + N log K) per query, O(ND) storage. */
 public final class VectorToolRouter implements ToolRouter {
-    private record Entry(ToolDefinition tool, float[] vector) {}
+    private record Entry(ToolDefinition tool, String text, float[] vector) {}
     private record Scored(ToolDefinition tool, double score) {}
     private record Index(long version, List<Entry> entries) {}
     private final InMemoryToolRegistry registry;
@@ -32,15 +34,31 @@ public final class VectorToolRouter implements ToolRouter {
     }
 
     private synchronized Index rebuild(InMemoryToolRegistry.Snapshot snapshot) {
-        if (index.version() == snapshot.version()) return index;
+        Index previous = index;
+        if (previous.version() >= snapshot.version()) return previous;
+        Map<String, Entry> existing = new HashMap<>();
+        for (Entry entry : previous.entries()) existing.put(entry.tool().name(), entry);
         List<ToolDefinition> tools = List.copyOf(snapshot.tools().values());
         List<String> texts = tools.stream().map(textBuilder::build).toList();
-        List<float[]> vectors = provider.embed(texts);
-        if (vectors.size() != tools.size()) throw new IllegalStateException("Embedding count mismatch");
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < tools.size(); i++) entries.add(new Entry(tools.get(i), vectors.get(i).clone()));
+        List<String> changedTexts = new ArrayList<>();
+        for (int i = 0; i < tools.size(); i++) {
+            Entry old = existing.get(tools.get(i).name());
+            if (old == null || !old.text().equals(texts.get(i))) changedTexts.add(texts.get(i));
+        }
+        List<float[]> changedVectors = changedTexts.isEmpty() ? List.of() : provider.embed(changedTexts);
+        if (changedVectors.size() != changedTexts.size()) throw new IllegalStateException("Embedding count mismatch");
+        List<Entry> entries = new ArrayList<>(tools.size());
+        int changedIndex = 0;
+        for (int i = 0; i < tools.size(); i++) {
+            ToolDefinition tool = tools.get(i);
+            String text = texts.get(i);
+            Entry old = existing.get(tool.name());
+            float[] vector = old != null && old.text().equals(text)
+                ? old.vector() : changedVectors.get(changedIndex++).clone();
+            entries.add(new Entry(tool, text, vector));
+        }
         Index built = new Index(snapshot.version(), List.copyOf(entries));
-        if (snapshot.version() > index.version()) index = built;
+        index = built;
         return built;
     }
 
