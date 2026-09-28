@@ -1,5 +1,13 @@
 package io.github.toolrouter;
 
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.embedding.OpenAiCompatibleEmbeddingProvider;
+import io.github.toolrouter.routing.ToolRouter;
+import io.github.toolrouter.routing.BM25ToolRouter;
+import io.github.toolrouter.routing.VectorToolRouter;
+import io.github.toolrouter.routing.HybridToolRouter;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,6 @@
-import io.github.toolrouter.BM25ToolRouter;
-import io.github.toolrouter.InMemoryToolRegistry;
-import io.github.toolrouter.ToolDefinition;
+import io.github.toolrouter.routing.BM25ToolRouter;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.model.ToolDefinition;
 import java.util.List;
 
 /** Standalone consumer that resolves the installed library and its dependencies. */

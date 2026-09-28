@@ -1,5 +1,7 @@
 package io.github.toolrouter;
 
+import io.github.toolrouter.embedding.EmbeddingProvider;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,4 +1,7 @@
-package io.github.toolrouter;
+package io.github.toolrouter.routing;
+
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResult;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,4 +1,6 @@
-package io.github.toolrouter;
+package io.github.toolrouter.registry;
+
+import io.github.toolrouter.model.ToolDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;

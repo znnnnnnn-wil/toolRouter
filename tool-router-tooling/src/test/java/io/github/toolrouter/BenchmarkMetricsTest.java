@@ -1,5 +1,9 @@
 package io.github.toolrouter;
 
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResult;
+import io.github.toolrouter.routing.ToolRouter;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import org.junit.jupiter.api.Test;

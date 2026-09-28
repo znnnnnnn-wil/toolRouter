@@ -1,4 +1,11 @@
-package io.github.toolrouter;
+package io.github.toolrouter.routing;
+
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResult;
+import io.github.toolrouter.model.RouteResponse;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.embedding.EmbeddingProvider;
+import io.github.toolrouter.embedding.OpenAiCompatibleEmbeddingProvider;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -13,7 +13,16 @@ Requires JDK 21 and Maven 3.9 or later. Set JAVA_HOME to a JDK 21 installation b
 - docs/: architecture, benchmark methodology, and development notes.
 - .github/workflows/ci.yml: reactor build, example smoke test, and library JAR boundary check.
 
-Each Maven module has its own `src/main/java` and `src/test/java` source roots. IntelliJ may display the repeated `io.github.toolrouter` package as one compact node in each module; the library and tooling sources are still separate. Module `target/` directories contain generated build output.
+The library's Java sources under `tool-router/src/main/java/io/github/toolrouter/` are grouped by responsibility:
+
+| Package | Contents |
+|---|---|
+| `model` | `ToolDefinition`, `ToolTextBuilder`, `RouteResult`, `RouteResponse` |
+| `registry` | `InMemoryToolRegistry` |
+| `embedding` | `EmbeddingProvider`, `OpenAiCompatibleEmbeddingProvider` |
+| `routing` | `ToolRouter`, `BM25ToolRouter`, `VectorToolRouter`, `HybridToolRouter` |
+
+This package change moves the 11 public types from `io.github.toolrouter` into these subpackages. Existing consumers must update their Java imports; class names and behavior are unchanged. The standalone consumer example shows the new imports. Each Maven module has its own `src/main/java` and `src/test/java` roots. Module `target/` directories contain generated build output.
 
 Generated files in module target/ directories, .m2repo/, .benchmark-cache/, and tool-router-tooling/benchmark/dataset.json are ignored. The Maven local repository is configured in .mvn/maven.config.
 

@@ -1,5 +1,11 @@
 package io.github.toolrouter;
 
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.embedding.EmbeddingProvider;
+import io.github.toolrouter.routing.ToolRouter;
+import io.github.toolrouter.routing.VectorToolRouter;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
