@@ -68,7 +68,7 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
         lock.writeLock().lock();
         try {
             if (closed) throw new IllegalStateException("router is closed");
-            if (indexedVersion == snapshot.version()) return;
+            if (indexedVersion >= snapshot.version()) return;
             BuiltIndex next = build(snapshot);
             DirectoryReader oldReader = reader;
             Directory oldDirectory = directory;
@@ -95,13 +95,23 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
 
     @Override public List<RouteResult> route(String query, int topK) {
         if (query == null || query.isBlank() || topK <= 0) return List.of();
-        InMemoryToolRegistry.Snapshot snapshot = registry.snapshot();
         while (true) {
-            refresh(snapshot);
+            InMemoryToolRegistry.Snapshot snapshot = registry.snapshot();
+            boolean needsRefresh;
             lock.readLock().lock();
-            if (indexedVersion == snapshot.version()) break;
-            lock.readLock().unlock();
+            try {
+                if (closed) throw new IllegalStateException("router is closed");
+                if (indexedVersion == snapshot.version()) return search(query, topK, snapshot);
+                needsRefresh = indexedVersion < snapshot.version();
+            } finally {
+                lock.readLock().unlock();
+            }
+            if (needsRefresh) refresh(snapshot);
         }
+    }
+
+    /** Called while holding the read lock for the matching registry snapshot. */
+    private List<RouteResult> search(String query, int topK, InMemoryToolRegistry.Snapshot snapshot) {
         try {
             if (snapshot.tools().isEmpty()) return List.of();
             MultiFieldQueryParser parser = new MultiFieldQueryParser(
@@ -120,8 +130,6 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
             return List.copyOf(results);
         } catch (IOException | ParseException e) {
             throw new IllegalStateException("Lucene search failed", e);
-        } finally {
-            lock.readLock().unlock();
         }
     }
 

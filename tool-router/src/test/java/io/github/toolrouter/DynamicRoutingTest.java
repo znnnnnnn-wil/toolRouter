@@ -1,6 +1,7 @@
 package io.github.toolrouter;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,10 +23,15 @@ class DynamicRoutingTest {
         assertThrows(IllegalStateException.class, () -> router.route("forecast", 1));
     }
 
-    @Test void vectorReembedsOnlyAfterRegistryVersionChanges() {
+    @Test void vectorEmbedsOnlyChangedRetrievalText() {
         AtomicInteger batches = new AtomicInteger();
+        AtomicInteger catalogBatches = new AtomicInteger();
         EmbeddingProvider provider = texts -> {
             batches.incrementAndGet();
+            if (texts.get(0).startsWith("Name: ")) {
+                catalogBatches.incrementAndGet();
+                assertEquals(1, texts.size(), "only the changed tool should be embedded");
+            }
             return texts.stream().map(t -> new float[]{t.contains("refund") ? 1 : 0,
                 t.contains("weather") ? 1 : 0}).toList();
         };
@@ -38,10 +44,19 @@ class DynamicRoutingTest {
         assertEquals(3, batches.get()); // query is not cached by the core router
         registry.register(tool("weather", "Predict weather"));
         router.route("refund", 1);
-        assertEquals(5, batches.get()); // refreshed tool batch plus query
+        assertEquals(5, batches.get()); // new tool batch plus query
         registry.remove("weather");
         router.route("refund", 1);
-        assertEquals(7, batches.get());
+        assertEquals(6, batches.get()); // removal needs no catalog embedding
+        registry.update(tool("refund", "Return payment"));
+        router.route("refund", 1);
+        assertEquals(8, batches.get()); // changed text plus query
+        registry.update(new ToolDefinition("refund", "Return payment", List.of(),
+            new ObjectMapper().createObjectNode().put("type", "object")));
+        RouteResult result = router.route("refund", 1).get(0);
+        assertEquals(9, batches.get()); // metadata-only update reuses the vector
+        assertEquals(3, catalogBatches.get());
+        assertEquals("object", result.tool().inputSchema().path("type").asText());
     }
 
     @Test void concurrentVectorRouteAndUpdateRemainConsistent() throws Exception {
