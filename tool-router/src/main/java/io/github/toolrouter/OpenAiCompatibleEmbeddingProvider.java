@@ -76,12 +76,10 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
                 .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body));
             if (apiKey != null && !apiKey.isBlank()) request.header("Authorization", "Bearer " + apiKey);
             HttpRequest built = request.build();
-            HttpResponse<String> response = null;
-            for (int attempt = 0; attempt <= maxRetries; attempt++) {
-                response = client.send(built, HttpResponse.BodyHandlers.ofString());
-                int status = response.statusCode();
-                if (status / 100 == 2 || !retryable(status) || attempt == maxRetries) break;
+            HttpResponse<String> response = client.send(built, HttpResponse.BodyHandlers.ofString());
+            for (int attempt = 0; attempt < maxRetries && retryable(response.statusCode()); attempt++) {
                 Thread.sleep(retryDelayMillis(response, attempt));
+                response = client.send(built, HttpResponse.BodyHandlers.ofString());
             }
             if (response.statusCode() / 100 != 2) {
                 throw new IllegalStateException("Embedding HTTP " + response.statusCode());
