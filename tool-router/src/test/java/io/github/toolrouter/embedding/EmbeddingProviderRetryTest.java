@@ -1,4 +1,4 @@
-package io.github.toolrouter;
+package io.github.toolrouter.embedding;
 
 import static org.junit.jupiter.api.Assertions.*;
 

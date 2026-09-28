@@ -10,7 +10,7 @@ As a tool catalog grows, sending every schema to an LLM increases prompt size an
 
 ## Architecture
 
-The Maven reactor has a library module (tool-router) and a separate tooling module (tool-router-tooling) for the example and benchmark. The library coordinates and Java API remain unchanged. See [architecture](docs/architecture.md) for the data flow and design details.
+The Maven reactor has a library module (tool-router) and a separate tooling module (tool-router-tooling) for the example and benchmark. The library API is organized into `model`, `registry`, `embedding`, and `routing` packages. See [architecture](docs/architecture.md) for the data flow and design details.
 
 ## Quick start
 
@@ -22,6 +22,11 @@ mvn -q -f tool-router-tooling/pom.xml exec:java "-Dexec.mainClass=io.github.tool
 ```
 
 ```java
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResponse;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.routing.BM25ToolRouter;
+
 InMemoryToolRegistry registry = new InMemoryToolRegistry();
 registry.register(new ToolDefinition(
     "refund_order", "Return money for a paid order",

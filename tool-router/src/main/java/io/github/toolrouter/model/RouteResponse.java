@@ -1,4 +1,4 @@
-package io.github.toolrouter;
+package io.github.toolrouter.model;
 
 import java.util.List;
 

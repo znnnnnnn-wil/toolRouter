@@ -1,4 +1,8 @@
-package io.github.toolrouter;
+package io.github.toolrouter.routing;
+
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResult;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
 
 import java.io.IOException;
 import java.util.ArrayList;

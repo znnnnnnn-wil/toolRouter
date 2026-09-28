@@ -1,4 +1,4 @@
-package io.github.toolrouter;
+package io.github.toolrouter.model;
 
 /** Stable retrieval text shared by embedding providers and benchmarks. */
 public final class ToolTextBuilder {

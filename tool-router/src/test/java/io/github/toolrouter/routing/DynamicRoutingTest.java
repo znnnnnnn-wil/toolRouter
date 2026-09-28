@@ -1,4 +1,9 @@
-package io.github.toolrouter;
+package io.github.toolrouter.routing;
+
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.RouteResult;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.embedding.EmbeddingProvider;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;

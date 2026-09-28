@@ -1,5 +1,7 @@
 package io.github.toolrouter;
 
+import io.github.toolrouter.embedding.EmbeddingProvider;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.nio.file.Path;
 import java.util.List;

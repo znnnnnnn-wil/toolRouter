@@ -1,4 +1,10 @@
-package io.github.toolrouter;
+package io.github.toolrouter.routing;
+
+import io.github.toolrouter.model.ToolDefinition;
+import io.github.toolrouter.model.ToolTextBuilder;
+import io.github.toolrouter.model.RouteResult;
+import io.github.toolrouter.registry.InMemoryToolRegistry;
+import io.github.toolrouter.embedding.EmbeddingProvider;
 
 import java.util.ArrayList;
 import java.util.Comparator;
