@@ -17,7 +17,8 @@ class DynamicRoutingTest {
         return new ToolDefinition(name, description, List.of(), null);
     }
 
-    @Test void bm25SeesDynamicRegistrationAndClosesCleanly() {
+    @Test
+    void bm25SeesDynamicRegistrationAndClosesCleanly() {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         BM25ToolRouter router = new BM25ToolRouter(registry);
         assertTrue(router.route("weather", 5).isEmpty());
@@ -28,7 +29,8 @@ class DynamicRoutingTest {
         assertThrows(IllegalStateException.class, () -> router.route("forecast", 1));
     }
 
-    @Test void vectorEmbedsOnlyChangedRetrievalText() {
+    @Test
+    void vectorEmbedsOnlyChangedRetrievalText() {
         AtomicInteger batches = new AtomicInteger();
         AtomicInteger catalogBatches = new AtomicInteger();
         EmbeddingProvider provider = texts -> {
@@ -64,7 +66,8 @@ class DynamicRoutingTest {
         assertEquals("object", result.tool().inputSchema().path("type").asText());
     }
 
-    @Test void concurrentVectorRouteAndUpdateRemainConsistent() throws Exception {
+    @Test
+    void concurrentVectorRouteAndUpdateRemainConsistent() throws Exception {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         registry.register(tool("status", "alpha"));
         EmbeddingProvider provider = texts -> texts.stream().map(t -> new float[]{
@@ -73,7 +76,9 @@ class DynamicRoutingTest {
         var pool = Executors.newFixedThreadPool(2);
         try {
             var writer = pool.submit(() -> {
-                for (int i = 0; i < 40; i++) registry.update(tool("status", i % 2 == 0 ? "alpha" : "beta"));
+                for (int i = 0; i < 40; i++) {
+                    registry.update(tool("status", i % 2 == 0 ? "alpha" : "beta"));
+                }
             });
             var reader = pool.submit(() -> {
                 for (int i = 0; i < 40; i++) {
@@ -89,7 +94,8 @@ class DynamicRoutingTest {
         }
     }
 
-    @Test void registryRejectsUnknownUpdateAndPreservesSnapshot() {
+    @Test
+    void registryRejectsUnknownUpdateAndPreservesSnapshot() {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         assertThrows(IllegalArgumentException.class, () -> registry.update(tool("missing", "x")));
         registry.register(tool("one", "alpha"));

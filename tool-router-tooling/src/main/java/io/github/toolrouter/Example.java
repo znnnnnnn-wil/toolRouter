@@ -11,14 +11,18 @@ import io.github.toolrouter.routing.HybridToolRouter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Minimal command-line example with selectable retrieval strategy. */
+/**
+ * 命令行使用示例，支持选择关键词、向量或混合检索策略。
+ */
 public final class Example {
     public static void main(String[] args) {
         String strategy = "bm25";
         List<String> words = new ArrayList<>();
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("--router")) {
-                if (++i == args.length) throw new IllegalArgumentException("--router requires bm25, vector or hybrid");
+                if (++i == args.length) {
+                    throw new IllegalArgumentException("--router requires bm25, vector or hybrid");
+                }
                 strategy = args[i];
             } else {
                 words.add(args[i]);
@@ -38,7 +42,9 @@ public final class Example {
                 router = bm25;
             } else if (strategy.equals("vector") || strategy.equals("hybrid")) {
                 String key = System.getenv("DASHSCOPE_API_KEY");
-                if (key == null || key.isBlank()) throw new IllegalStateException("Set DASHSCOPE_API_KEY");
+                if (key == null || key.isBlank()) {
+                    throw new IllegalStateException("Set DASHSCOPE_API_KEY");
+                }
                 String url = env("EMBEDDING_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1");
                 String model = env("EMBEDDING_MODEL", "text-embedding-v4");
                 int dimensions = Integer.parseInt(env("EMBEDDING_DIMENSIONS", "1024"));

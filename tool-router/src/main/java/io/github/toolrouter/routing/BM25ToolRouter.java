@@ -26,9 +26,13 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
-/** Lucene BM25 retriever with configurable field weights and snapshot-safe rebuilds. */
+/**
+ * 基于 Lucene BM25 的关键词检索，支持字段权重，并通过读写锁保证索引与注册表快照一致。
+ */
 public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
-    private record BuiltIndex(Directory directory, DirectoryReader reader) {}
+    private record BuiltIndex(Directory directory, DirectoryReader reader) {
+    }
+
     private final InMemoryToolRegistry registry;
     private final Map<String, Float> boosts;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -38,7 +42,9 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
     private long indexedVersion = -1;
     private boolean closed;
 
-    public BM25ToolRouter(InMemoryToolRegistry registry) { this(registry, 1f, 1f, 1f); }
+    public BM25ToolRouter(InMemoryToolRegistry registry) {
+        this(registry, 1f, 1f, 1f);
+    }
 
     public BM25ToolRouter(InMemoryToolRegistry registry, float nameBoost, float tagsBoost, float descriptionBoost) {
         if (nameBoost <= 0 || tagsBoost <= 0 || descriptionBoost <= 0) {
@@ -63,7 +69,11 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
             }
             return new BuiltIndex(next, DirectoryReader.open(next));
         } catch (IOException | RuntimeException failure) {
-            try { next.close(); } catch (IOException closeFailure) { failure.addSuppressed(closeFailure); }
+            try {
+                next.close();
+            } catch (IOException closeFailure) {
+                failure.addSuppressed(closeFailure);
+            }
             throw failure;
         }
     }
@@ -71,8 +81,13 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
     private void refresh(InMemoryToolRegistry.Snapshot snapshot) {
         lock.writeLock().lock();
         try {
-            if (closed) throw new IllegalStateException("router is closed");
-            if (indexedVersion >= snapshot.version()) return;
+            if (closed) {
+                throw new IllegalStateException("router is closed");
+            }
+            if (indexedVersion >= snapshot.version()) {
+                return;
+            }
+            // 新索引构建成功后再替换旧索引，构建失败时保留可用资源。
             BuiltIndex next = build(snapshot);
             DirectoryReader oldReader = reader;
             Directory oldDirectory = directory;
@@ -81,15 +96,26 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
             indexedVersion = snapshot.version();
             IOException closeFailure = null;
             if (oldReader != null) {
-                try { oldReader.close(); } catch (IOException e) { closeFailure = e; }
-            }
-            if (oldDirectory != null) {
-                try { oldDirectory.close(); } catch (IOException e) {
-                    if (closeFailure == null) closeFailure = e;
-                    else closeFailure.addSuppressed(e);
+                try {
+                    oldReader.close();
+                } catch (IOException e) {
+                    closeFailure = e;
                 }
             }
-            if (closeFailure != null) throw closeFailure;
+            if (oldDirectory != null) {
+                try {
+                    oldDirectory.close();
+                } catch (IOException e) {
+                    if (closeFailure == null) {
+                        closeFailure = e;
+                    } else {
+                        closeFailure.addSuppressed(e);
+                    }
+                }
+            }
+            if (closeFailure != null) {
+                throw closeFailure;
+            }
         } catch (IOException e) {
             throw new IllegalStateException("Lucene index failed", e);
         } finally {
@@ -97,27 +123,41 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
         }
     }
 
-    @Override public List<RouteResult> route(String query, int topK) {
-        if (query == null || query.isBlank() || topK <= 0) return List.of();
+    @Override
+    public List<RouteResult> route(String query, int topK) {
+        if (query == null || query.isBlank() || topK <= 0) {
+            return List.of();
+        }
+        // 刷新索引需释放读锁；并发更新后重新取快照，直到索引与快照版本一致。
         while (true) {
             InMemoryToolRegistry.Snapshot snapshot = registry.snapshot();
             boolean needsRefresh;
             lock.readLock().lock();
             try {
-                if (closed) throw new IllegalStateException("router is closed");
-                if (indexedVersion == snapshot.version()) return search(query, topK, snapshot);
+                if (closed) {
+                    throw new IllegalStateException("router is closed");
+                }
+                if (indexedVersion == snapshot.version()) {
+                    return search(query, topK, snapshot);
+                }
                 needsRefresh = indexedVersion < snapshot.version();
             } finally {
                 lock.readLock().unlock();
             }
-            if (needsRefresh) refresh(snapshot);
+            if (needsRefresh) {
+                refresh(snapshot);
+            }
         }
     }
 
-    /** Called while holding the read lock for the matching registry snapshot. */
+    /**
+     * 仅在持有读锁且索引版本与注册表快照一致时执行检索。
+     */
     private List<RouteResult> search(String query, int topK, InMemoryToolRegistry.Snapshot snapshot) {
         try {
-            if (snapshot.tools().isEmpty()) return List.of();
+            if (snapshot.tools().isEmpty()) {
+                return List.of();
+            }
             MultiFieldQueryParser parser = new MultiFieldQueryParser(
                 new String[]{"name", "tags", "description"}, analyzer, boosts);
             parser.setDefaultOperator(MultiFieldQueryParser.Operator.OR);
@@ -129,7 +169,9 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
             List<RouteResult> results = new ArrayList<>(hits.length);
             for (ScoreDoc hit : hits) {
                 ToolDefinition tool = snapshot.tools().get(reader.storedFields().document(hit.doc).get("id"));
-                if (tool != null) results.add(new RouteResult(tool, hit.score, results.size() + 1));
+                if (tool != null) {
+                    results.add(new RouteResult(tool, hit.score, results.size() + 1));
+                }
             }
             return List.copyOf(results);
         } catch (IOException | ParseException e) {
@@ -137,26 +179,41 @@ public final class BM25ToolRouter implements ToolRouter, AutoCloseable {
         }
     }
 
-    @Override public void close() {
+    @Override
+    public void close() {
         lock.writeLock().lock();
         try {
-            if (closed) return;
+            if (closed) {
+                return;
+            }
             closed = true;
+            // 尝试关闭所有资源，将后续关闭异常附加到首个异常上。
             IOException failure = null;
             if (reader != null) {
-                try { reader.close(); } catch (IOException e) { failure = e; }
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    failure = e;
+                }
             }
             if (directory != null) {
-                try { directory.close(); } catch (IOException e) {
-                    if (failure == null) failure = e;
-                    else failure.addSuppressed(e);
+                try {
+                    directory.close();
+                } catch (IOException e) {
+                    if (failure == null) {
+                        failure = e;
+                    } else {
+                        failure.addSuppressed(e);
+                    }
                 }
             }
             analyzer.close();
             reader = null;
             directory = null;
             indexedVersion = -1;
-            if (failure != null) throw new IllegalStateException("Lucene close failed", failure);
+            if (failure != null) {
+                throw new IllegalStateException("Lucene close failed", failure);
+            }
         } finally {
             lock.writeLock().unlock();
         }

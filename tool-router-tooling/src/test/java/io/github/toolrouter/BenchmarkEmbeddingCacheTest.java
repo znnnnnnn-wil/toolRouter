@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class BenchmarkEmbeddingCacheTest {
-    @TempDir Path cacheDirectory;
+    @TempDir
+    Path cacheDirectory;
 
-    @Test void benchmarkCachePersistsOnlyVectors() throws Exception {
+    @Test
+    void benchmarkCachePersistsOnlyVectors() throws Exception {
         AtomicInteger calls = new AtomicInteger();
         EmbeddingProvider delegate = texts -> {
             calls.incrementAndGet();
