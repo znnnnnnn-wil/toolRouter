@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class BenchmarkLatencyTest {
-    @Test void onlineQueriesBypassTheCatalogCache() {
+    @Test
+    void onlineQueriesBypassTheCatalogCache() {
         AtomicInteger catalogCalls = new AtomicInteger();
         AtomicInteger remoteCalls = new AtomicInteger();
         EmbeddingProvider catalogCache = texts -> {
@@ -34,7 +35,8 @@ class BenchmarkLatencyTest {
         assertEquals(2, remoteCalls.get(), "every online query must call the remote provider");
     }
 
-    @Test void warmupIsExcludedAndPercentilesUseNearestRank() {
+    @Test
+    void warmupIsExcludedAndPercentilesUseNearestRank() {
         AtomicInteger calls = new AtomicInteger();
         ToolRouter router = (query, topK) -> {
             calls.incrementAndGet();

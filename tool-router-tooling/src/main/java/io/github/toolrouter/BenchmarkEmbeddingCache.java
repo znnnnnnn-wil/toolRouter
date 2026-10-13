@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Persistent benchmark cache for model outputs. Cache keys include endpoint,
- * model, dimensions and exact text; credentials never enter keys or files.
+ * 基准测试使用的持久化向量缓存。缓存键包含接口地址、模型、维度及原始文本，
+ * 凭据不写入缓存键或缓存文件。
  */
 final class BenchmarkEmbeddingCache implements EmbeddingProvider {
     private final EmbeddingProvider delegate;
@@ -34,42 +34,67 @@ final class BenchmarkEmbeddingCache implements EmbeddingProvider {
         this.dimensions = dimensions;
     }
 
-    @Override public synchronized List<float[]> embed(List<String> texts) {
-        if (texts.isEmpty()) return List.of();
+    @Override
+    public synchronized List<float[]> embed(List<String> texts) {
+        if (texts.isEmpty()) {
+            return List.of();
+        }
+        // 依次查内存和磁盘缓存，对缺失文本去重后再批量请求。
         Map<String, Path> missing = new LinkedHashMap<>();
         for (String text : texts) {
-            if (memory.containsKey(text)) continue;
+            if (memory.containsKey(text)) {
+                continue;
+            }
             Path path = directory.resolve(hash(namespace + "\n" + text) + ".bin");
             float[] cached = read(path);
-            if (cached != null) memory.put(text, cached);
-            else missing.putIfAbsent(text, path);
+            if (cached != null) {
+                memory.put(text, cached);
+            } else {
+                missing.putIfAbsent(text, path);
+            }
         }
         if (!missing.isEmpty()) {
             List<String> inputs = List.copyOf(missing.keySet());
             List<float[]> vectors = delegate.embed(inputs);
-            if (vectors.size() != inputs.size()) throw new IllegalStateException("Embedding count mismatch");
+            if (vectors.size() != inputs.size()) {
+                throw new IllegalStateException("Embedding count mismatch");
+            }
             for (int i = 0; i < inputs.size(); i++) {
                 float[] vector = vectors.get(i).clone();
-                if (vector.length != dimensions) throw new IllegalStateException("Embedding dimension mismatch");
+                if (vector.length != dimensions) {
+                    throw new IllegalStateException("Embedding dimension mismatch");
+                }
                 memory.put(inputs.get(i), vector);
                 write(missing.get(inputs.get(i)), vector);
             }
         }
+        // 返回向量副本，避免调用方修改内存缓存。
         List<float[]> results = new ArrayList<>(texts.size());
-        for (String text : texts) results.add(memory.get(text).clone());
+        for (String text : texts) {
+            results.add(memory.get(text).clone());
+        }
         return List.copyOf(results);
     }
 
     private float[] read(Path path) {
-        if (!Files.isRegularFile(path)) return null;
+        if (!Files.isRegularFile(path)) {
+            return null;
+        }
         try (DataInputStream in = new DataInputStream(Files.newInputStream(path))) {
             int size = in.readInt();
-            if (size != dimensions) return null;
+            if (size != dimensions) {
+                return null;
+            }
             float[] vector = new float[size];
-            for (int i = 0; i < size; i++) vector[i] = in.readFloat();
-            if (in.read() != -1) return null;
+            for (int i = 0; i < size; i++) {
+                vector[i] = in.readFloat();
+            }
+            if (in.read() != -1) {
+                return null;
+            }
             return vector;
         } catch (IOException e) {
+            // 缓存读取失败按未命中处理，交由远程接口重新生成。
             return null;
         }
     }
@@ -77,11 +102,14 @@ final class BenchmarkEmbeddingCache implements EmbeddingProvider {
     private void write(Path path, float[] vector) {
         try {
             Files.createDirectories(directory);
+            // 先完整写入临时文件再替换缓存文件，避免写入失败留下半份数据。
             Path temporary = Files.createTempFile(directory, "embedding-", ".tmp");
             try {
                 try (DataOutputStream out = new DataOutputStream(Files.newOutputStream(temporary))) {
                     out.writeInt(vector.length);
-                    for (float value : vector) out.writeFloat(value);
+                    for (float value : vector) {
+                        out.writeFloat(value);
+                    }
                 }
                 Files.move(temporary, path, StandardCopyOption.REPLACE_EXISTING);
             } finally {

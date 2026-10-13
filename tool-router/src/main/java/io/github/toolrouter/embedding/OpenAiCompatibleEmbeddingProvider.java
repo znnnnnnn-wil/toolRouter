@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/** Batch client for an OpenAI-compatible embeddings endpoint. */
+/**
+ * 兼容 OpenAI 向量接口的批量客户端，支持超时、有限次数重试及响应校验。
+ */
 public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvider {
     private final URI endpoint;
     private final String apiKey;
@@ -59,9 +61,13 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
         this.initialBackoff = initialBackoff;
     }
 
-    @Override public List<float[]> embed(List<String> texts) {
-        if (texts.isEmpty()) return List.of();
+    @Override
+    public List<float[]> embed(List<String> texts) {
+        if (texts.isEmpty()) {
+            return List.of();
+        }
         List<float[]> all = new ArrayList<>(texts.size());
+        // 按批次上限拆分请求，并保持各批次和批内结果的输入顺序。
         for (int start = 0; start < texts.size(); start += batchSize) {
             all.addAll(request(texts.subList(start, Math.min(start + batchSize, texts.size()))));
         }
@@ -74,9 +80,12 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
                 "model", model, "input", texts, "dimensions", dimensions, "encoding_format", "float"));
             HttpRequest.Builder request = HttpRequest.newBuilder(endpoint).timeout(requestTimeout)
                 .header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body));
-            if (apiKey != null && !apiKey.isBlank()) request.header("Authorization", "Bearer " + apiKey);
+            if (apiKey != null && !apiKey.isBlank()) {
+                request.header("Authorization", "Bearer " + apiKey);
+            }
             HttpRequest built = request.build();
             HttpResponse<String> response = client.send(built, HttpResponse.BodyHandlers.ofString());
+            // 仅对可重试的 HTTP 状态重试，次数不包含首次请求。
             for (int attempt = 0; attempt < maxRetries && retryable(response.statusCode()); attempt++) {
                 Thread.sleep(retryDelayMillis(response, attempt));
                 response = client.send(built, HttpResponse.BodyHandlers.ofString());
@@ -88,6 +97,7 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
             if (!data.isArray() || data.size() != texts.size()) {
                 throw new IllegalStateException("Invalid embedding response count");
             }
+            // 服务端可能乱序返回，使用 index 还原顺序并拒绝重复、缺失或维度异常。
             float[][] vectors = new float[texts.size()][];
             for (JsonNode item : data) {
                 int index = item.path("index").asInt(-1);
@@ -98,21 +108,28 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
                 }
                 float[] vector = new float[dimensions];
                 for (int i = 0; i < dimensions; i++) {
-                    if (!values.get(i).isNumber()) throw new IllegalStateException("Invalid embedding value");
+                    if (!values.get(i).isNumber()) {
+                        throw new IllegalStateException("Invalid embedding value");
+                    }
                     vector[i] = (float) values.get(i).asDouble();
-                    if (!Float.isFinite(vector[i])) throw new IllegalStateException("Non-finite embedding value");
+                    if (!Float.isFinite(vector[i])) {
+                        throw new IllegalStateException("Non-finite embedding value");
+                    }
                 }
                 vectors[index] = vector;
             }
             List<float[]> ordered = new ArrayList<>(vectors.length);
             for (float[] vector : vectors) {
-                if (vector == null) throw new IllegalStateException("Missing embedding");
+                if (vector == null) {
+                    throw new IllegalStateException("Missing embedding");
+                }
                 ordered.add(vector);
             }
             return ordered;
         } catch (IOException e) {
             throw new IllegalStateException("Embedding request failed", e);
         } catch (InterruptedException e) {
+            // 恢复中断标记，让上层仍能感知线程取消请求。
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Embedding interrupted", e);
         }
@@ -127,8 +144,11 @@ public final class OpenAiCompatibleEmbeddingProvider implements EmbeddingProvide
         long base = initialBackoff.compareTo(Duration.ofSeconds(5)) >= 0
             ? 5_000 : initialBackoff.toMillis();
         long fallback = Math.min(5_000, base * (1L << attempt));
+        // 优先使用 Retry-After（秒数或 HTTP 日期），无效时采用指数退避，最多等待 5 秒。
         String header = response.headers().firstValue("Retry-After").orElse(null);
-        if (header == null) return fallback;
+        if (header == null) {
+            return fallback;
+        }
         try {
             return Math.min(5_000, Math.max(0, Math.multiplyExact(Long.parseLong(header.trim()), 1_000)));
         } catch (NumberFormatException | ArithmeticException ignored) {

@@ -25,7 +25,8 @@ class RouterEdgeTest {
         return new ToolDefinition(name, description, List.of(tags), null);
     }
 
-    @Test void schemaAndTagsAreDefensivelyCopied() {
+    @Test
+    void schemaAndTagsAreDefensivelyCopied() {
         ObjectNode schema = new ObjectMapper().createObjectNode().put("type", "object");
         List<String> tags = new ArrayList<>(List.of("one"));
         ToolDefinition tool = new ToolDefinition("safe", null, tags, schema);
@@ -39,7 +40,8 @@ class RouterEdgeTest {
         assertThrows(IllegalArgumentException.class, () -> new ToolDefinition("", "", List.of(), null));
     }
 
-    @Test void scoreGapHintIsNotProbability() {
+    @Test
+    void scoreGapHintIsNotProbability() {
         ToolDefinition a = tool("a", "first");
         ToolDefinition b = tool("b", "second");
         ToolRouter uncertain = (q, k) -> List.of(new RouteResult(a, 10, 1), new RouteResult(b, 9.5, 2));
@@ -65,7 +67,8 @@ class RouterEdgeTest {
         assertTrue(none.routeWithHint("x", 2).fallbackRecommended());
     }
 
-    @Test void vectorTopKAndInvalidInputs() {
+    @Test
+    void vectorTopKAndInvalidInputs() {
         EmbeddingProvider provider = texts -> texts.stream().map(t -> new float[]{
             t.contains("alpha") ? 1 : 0, t.contains("beta") ? 1 : 0}).toList();
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
@@ -82,7 +85,8 @@ class RouterEdgeTest {
             () -> VectorToolRouter.cosine(new float[]{Float.NaN}, new float[]{1}));
     }
 
-    @Test void compatibleProviderBatchesAndRestoresResponseOrder() throws Exception {
+    @Test
+    void compatibleProviderBatchesAndRestoresResponseOrder() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AtomicInteger calls = new AtomicInteger();
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
@@ -117,7 +121,9 @@ class RouterEdgeTest {
                 "http://127.0.0.1:" + server.getAddress().getPort() + "/v1", null,
                 "text-embedding-v4", 3, 10, HttpClient.newHttpClient());
             List<String> texts = new ArrayList<>();
-            for (int i = 0; i < 23; i++) texts.add("text " + i);
+            for (int i = 0; i < 23; i++) {
+                texts.add("text " + i);
+            }
             List<float[]> vectors = provider.embed(texts);
             assertEquals(23, vectors.size());
             assertEquals(3, calls.get());

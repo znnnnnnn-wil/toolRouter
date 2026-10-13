@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class EmbeddingProviderRetryTest {
-    @Test void retriesTransientResponsesAndPreservesResult() throws Exception {
+    @Test
+    void retriesTransientResponsesAndPreservesResult() throws Exception {
         AtomicInteger requests = new AtomicInteger();
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/v1/embeddings", exchange -> {
@@ -40,7 +41,8 @@ class EmbeddingProviderRetryTest {
         }
     }
 
-    @Test void doesNotRetryAuthenticationErrors() throws Exception {
+    @Test
+    void doesNotRetryAuthenticationErrors() throws Exception {
         AtomicInteger requests = new AtomicInteger();
         HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/v1/embeddings", exchange -> {

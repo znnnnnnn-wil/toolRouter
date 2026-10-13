@@ -17,12 +17,14 @@ class RouterTest {
     private static ToolDefinition tool(String name, String description) {
         return new ToolDefinition(name, description, List.of(), null);
     }
+
     private static final EmbeddingProvider FIXED = texts -> texts.stream().map(text -> {
         String lower = text.toLowerCase();
         return new float[]{lower.contains("refund") ? 1 : 0, lower.contains("weather") ? 1 : 0, lower.contains("order") ? 1 : 0};
     }).toList();
 
-    @Test void registryAndText() {
+    @Test
+    void registryAndText() {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         ToolDefinition original = tool("get_order", "Read an order");
         registry.register(original);
@@ -37,7 +39,8 @@ class RouterTest {
         assertThrows(IllegalArgumentException.class, () -> tool(" ", ""));
     }
 
-    @Test void concurrentRegistryWriters() throws Exception {
+    @Test
+    void concurrentRegistryWriters() throws Exception {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         var pool = Executors.newFixedThreadPool(4);
         CountDownLatch start = new CountDownLatch(1);
@@ -46,17 +49,22 @@ class RouterTest {
             int thread = t;
             jobs.add(pool.submit(() -> {
                 start.await();
-                for (int i = 0; i < 25; i++) registry.register(tool("tool_" + thread + "_" + i, "test"));
+                for (int i = 0; i < 25; i++) {
+                    registry.register(tool("tool_" + thread + "_" + i, "test"));
+                }
                 return null;
             }));
         }
         start.countDown();
-        for (var job : jobs) job.get();
+        for (var job : jobs) {
+            job.get();
+        }
         pool.shutdown();
         assertEquals(100, registry.size());
     }
 
-    @Test void bm25RebuildAndEdges() {
+    @Test
+    void bm25RebuildAndEdges() {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         registry.register(tool("refund_order", "Return money for an order"));
         registry.register(tool("cancel_order", "Stop an order before shipping"));
@@ -73,7 +81,8 @@ class RouterTest {
         }
     }
 
-    @Test void vectorCosineAndUpdates() {
+    @Test
+    void vectorCosineAndUpdates() {
         assertEquals(1, VectorToolRouter.cosine(new float[]{1, 0}, new float[]{2, 0}), 1e-9);
         assertEquals(0, VectorToolRouter.cosine(new float[]{0, 0}, new float[]{1, 0}));
         assertThrows(IllegalArgumentException.class, () -> VectorToolRouter.cosine(new float[]{1}, new float[]{1, 2}));
@@ -91,7 +100,8 @@ class RouterTest {
         assertEquals(1, router.route("weather", 5).size());
     }
 
-    @Test void rrfMergesDuplicatesAndOrders() {
+    @Test
+    void rrfMergesDuplicatesAndOrders() {
         ToolDefinition a = tool("a", "");
         ToolDefinition b = tool("b", "");
         ToolDefinition c = tool("c", "");
@@ -103,7 +113,8 @@ class RouterTest {
         assertTrue(hybrid.route(" ", 5).isEmpty());
     }
 
-    @Test void concurrentBm25RoutingAndUpdates() throws Exception {
+    @Test
+    void concurrentBm25RoutingAndUpdates() throws Exception {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         registry.register(tool("status", "version alpha"));
         try (BM25ToolRouter router = new BM25ToolRouter(registry)) {
@@ -111,13 +122,17 @@ class RouterTest {
             CountDownLatch start = new CountDownLatch(1);
             var writer = pool.submit(() -> {
                 start.await();
-                for (int i = 0; i < 50; i++) registry.update(tool("status", "version " + (i % 2 == 0 ? "alpha" : "beta")));
+                for (int i = 0; i < 50; i++) {
+                    registry.update(tool("status", "version " + (i % 2 == 0 ? "alpha" : "beta")));
+                }
                 return null;
             });
             var reader = pool.submit(() -> {
                 start.await();
                 for (int i = 0; i < 50; i++) {
-                    for (RouteResult result : router.route("version", 5)) assertEquals("status", result.tool().name());
+                    for (RouteResult result : router.route("version", 5)) {
+                        assertEquals("status", result.tool().name());
+                    }
                 }
                 return null;
             });
@@ -130,7 +145,8 @@ class RouterTest {
         }
     }
 
-    @Test void bm25DoesNotRestoreAnOlderSnapshot() throws Exception {
+    @Test
+    void bm25DoesNotRestoreAnOlderSnapshot() throws Exception {
         InMemoryToolRegistry registry = new InMemoryToolRegistry();
         registry.register(tool("status", "alpha"));
         InMemoryToolRegistry.Snapshot stale = registry.snapshot();

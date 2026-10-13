@@ -13,7 +13,8 @@ class BenchmarkMetricsTest {
         return new ToolDefinition(name, description, List.of(), null);
     }
 
-    @Test void benchmarkMetricsCountRanks() {
+    @Test
+    void benchmarkMetricsCountRanks() {
         ToolDefinition a = tool("a", "");
         ToolDefinition b = tool("b", "");
         ToolRouter router = (q, k) -> List.of(new RouteResult(a, 1, 1), new RouteResult(b, 0.5, 2));

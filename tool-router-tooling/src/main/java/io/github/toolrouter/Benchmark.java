@@ -25,12 +25,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-/** Reproducible benchmark over checked-in, labeled natural-language queries. */
+/**
+ * 使用仓库内带标签的自然语言查询执行可复现的基准测试。
+ */
 public final class Benchmark {
-    record Case(String query, String expectedTool, String category, String difficulty) {}
-    private record Dataset(List<ToolDefinition> tools, List<Case> queries) {}
-    record Metrics(double r1, double r3, double r5, double mrr, double p50, double p95) {}
-    record Latency(double p50, double p95) {}
+    record Case(String query, String expectedTool, String category, String difficulty) {
+    }
+
+    private record Dataset(List<ToolDefinition> tools, List<Case> queries) {
+    }
+
+    record Metrics(double r1, double r3, double r5, double mrr, double p50, double p95) {
+    }
+
+    record Latency(double p50, double p95) {
+    }
 
     private static Dataset load() throws IOException {
         List<ToolDefinition> tools = new ArrayList<>();
@@ -38,7 +47,9 @@ public final class Benchmark {
         Set<String> names = new HashSet<>();
         List<String> lines;
         InputStream resource = Benchmark.class.getResourceAsStream("/benchmark/dataset.tsv");
-        if (resource == null) throw new IllegalStateException("Missing benchmark dataset resource");
+        if (resource == null) {
+            throw new IllegalStateException("Missing benchmark dataset resource");
+        }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource, StandardCharsets.UTF_8))) {
             lines = reader.lines().toList();
         }
@@ -52,7 +63,9 @@ public final class Benchmark {
             }
             ToolDefinition tool = new ToolDefinition(fields[1], fields[2],
                 List.of(fields[3].split(" ")), null);
-            if (!names.add(tool.name())) throw new IllegalArgumentException("Duplicate dataset tool");
+            if (!names.add(tool.name())) {
+                throw new IllegalArgumentException("Duplicate dataset tool");
+            }
             tools.add(tool);
             queries.add(new Case(fields[4], tool.name(), fields[0], "easy"));
             queries.add(new Case(fields[5], tool.name(), fields[0], "hard"));
@@ -61,9 +74,16 @@ public final class Benchmark {
     }
 
     static Metrics measure(ToolRouter router, List<Case> queries) {
-        if (queries.isEmpty()) throw new IllegalArgumentException("queries must not be empty");
-        for (Case item : queries.subList(0, Math.min(20, queries.size()))) router.route(item.query(), 5);
-        int r1 = 0, r3 = 0, r5 = 0;
+        if (queries.isEmpty()) {
+            throw new IllegalArgumentException("queries must not be empty");
+        }
+        // 先预热索引和查询路径，预热调用不参与准确率及延迟统计。
+        for (Case item : queries.subList(0, Math.min(20, queries.size()))) {
+            router.route(item.query(), 5);
+        }
+        int r1 = 0;
+        int r3 = 0;
+        int r5 = 0;
         double reciprocal = 0;
         List<Long> times = new ArrayList<>();
         for (Case item : queries) {
@@ -72,9 +92,14 @@ public final class Benchmark {
             times.add(System.nanoTime() - start);
             for (int i = 0; i < results.size(); i++) {
                 if (results.get(i).tool().name().equals(item.expectedTool())) {
-                    if (i == 0) r1++;
-                    if (i < 3) r3++;
+                    if (i == 0) {
+                        r1++;
+                    }
+                    if (i < 3) {
+                        r3++;
+                    }
                     r5++;
+                    // 首次命中的倒数排名用于计算 MRR，未命中查询贡献为 0。
                     reciprocal += 1.0 / (i + 1);
                     break;
                 }
@@ -111,7 +136,9 @@ public final class Benchmark {
             if (!hasKey && !cachedOnly) {
                 System.out.println("Vector     Not measured (DASHSCOPE_API_KEY absent)");
                 System.out.println("Hybrid     Not measured (DASHSCOPE_API_KEY absent)");
-                if (Arrays.asList(args).contains("--scaling")) scaling(data, null);
+                if (Arrays.asList(args).contains("--scaling")) {
+                    scaling(data, null);
+                }
                 if (Arrays.asList(args).contains("--online")) {
                     System.out.println("Online / end-to-end latency not measured (DASHSCOPE_API_KEY absent)");
                 }
@@ -119,11 +146,13 @@ public final class Benchmark {
             }
             EmbeddingProvider remote = hasKey
                 ? new OpenAiCompatibleEmbeddingProvider(baseUrl, key, model, dimensions)
-                : texts -> { throw new IllegalStateException("Missing real cached embedding; set DASHSCOPE_API_KEY"); };
+                : texts -> {
+                    throw new IllegalStateException("Missing real cached embedding; set DASHSCOPE_API_KEY");
+                };
             BenchmarkEmbeddingCache cache = new BenchmarkEmbeddingCache(remote,
                 Path.of(env("BENCHMARK_CACHE_DIR", ".benchmark-cache")),
                 baseUrl + "\n" + model + "\n" + dimensions, dimensions);
-            // This precompute is intentionally excluded from the routing latency table.
+            // 提前生成工具和查询向量，这部分耗时不计入纯检索延迟。
             long precomputeStart = System.nanoTime();
             cache.embed(data.tools().stream().map(new ToolTextBuilder()::build).toList());
             cache.embed(data.queries().stream().map(Case::query).toList());
@@ -138,10 +167,15 @@ public final class Benchmark {
             print("Vector", measure(vector, hard));
             print("Hybrid", measure(hybrid, hard));
             compareHard(hard, bm25, vector, hybrid);
-            if (Arrays.asList(args).contains("--scaling")) scaling(data, cache);
+            if (Arrays.asList(args).contains("--scaling")) {
+                scaling(data, cache);
+            }
             if (Arrays.asList(args).contains("--online")) {
-                if (hasKey) online(data, registry, bm25, cache, remote);
-                else System.out.println("Online / end-to-end latency not measured (DASHSCOPE_API_KEY absent)");
+                if (hasKey) {
+                    online(data, registry, bm25, cache, remote);
+                } else {
+                    System.out.println("Online / end-to-end latency not measured (DASHSCOPE_API_KEY absent)");
+                }
             }
         }
     }
@@ -154,9 +188,15 @@ public final class Benchmark {
             boolean lexical = topIs(bm25, item);
             boolean semantic = topIs(vector, item);
             boolean fused = topIs(hybrid, item);
-            if (semantic && !fused) vectorOnly++;
-            if (lexical && !fused) bm25Only++;
-            if (fused && !semantic && !lexical) hybridRecovery++;
+            if (semantic && !fused) {
+                vectorOnly++;
+            }
+            if (lexical && !fused) {
+                bm25Only++;
+            }
+            if (fused && !semantic && !lexical) {
+                hybridRecovery++;
+            }
         }
         System.out.printf("Hard Top-1: vector correct but hybrid wrong=%d; BM25 correct but hybrid wrong=%d; hybrid-only recoveries=%d%n",
             vectorOnly, bm25Only, hybridRecovery);
@@ -172,8 +212,13 @@ public final class Benchmark {
             name, latency.p50(), latency.p95());
     }
 
+    /**
+     * 使用最近秩法计算分位数，输入须按耗时升序排列，纳秒转换为毫秒。
+     */
     static double percentileMillis(List<Long> sorted, double percentile) {
-        if (sorted.isEmpty()) throw new IllegalArgumentException("latency samples must not be empty");
+        if (sorted.isEmpty()) {
+            throw new IllegalArgumentException("latency samples must not be empty");
+        }
         return sorted.get((int) Math.ceil(percentile * sorted.size()) - 1) / 1e6;
     }
 
@@ -181,7 +226,9 @@ public final class Benchmark {
         if (sample.isEmpty() || warmupCalls < 0 || rounds <= 0) {
             throw new IllegalArgumentException("nonempty sample, nonnegative warmup and positive rounds required");
         }
-        for (int i = 0; i < warmupCalls; i++) router.route(sample.get(i % sample.size()).query(), 5);
+        for (int i = 0; i < warmupCalls; i++) {
+            router.route(sample.get(i % sample.size()).query(), 5);
+        }
         List<Long> times = new ArrayList<>(sample.size() * rounds);
         for (int round = 0; round < rounds; round++) {
             for (Case item : sample) {
@@ -196,6 +243,7 @@ public final class Benchmark {
 
     private static List<Case> sample(List<Case> queries) {
         List<Case> shuffled = new ArrayList<>(queries);
+        // 固定随机种子，使不同策略及规模使用相同的查询样本。
         Collections.shuffle(shuffled, new java.util.Random(42));
         return List.copyOf(shuffled.subList(0, Math.min(50, shuffled.size())));
     }
@@ -205,11 +253,20 @@ public final class Benchmark {
         return value == null || value.isBlank() ? fallback : value;
     }
 
-    /** Only catalog batches use the cache; each query is sent to the remote provider. */
+    /**
+     * 仅工具目录的批量向量使用缓存；每次查询均调用远程接口，以测量端到端延迟。
+     */
     static EmbeddingProvider onlineProvider(EmbeddingProvider catalogCache, EmbeddingProvider remote) {
         return new EmbeddingProvider() {
-            @Override public List<float[]> embed(List<String> texts) { return catalogCache.embed(texts); }
-            @Override public float[] embed(String text) { return remote.embed(text); }
+            @Override
+            public List<float[]> embed(List<String> texts) {
+                return catalogCache.embed(texts);
+            }
+
+            @Override
+            public float[] embed(String text) {
+                return remote.embed(text);
+            }
         };
     }
 
@@ -217,7 +274,7 @@ public final class Benchmark {
                                EmbeddingProvider catalogCache, EmbeddingProvider remote) {
         List<Case> queries = sample(data.queries());
         VectorToolRouter vector = new VectorToolRouter(registry, onlineProvider(catalogCache, remote));
-        // Build the tool index before timing. This call also warms one remote request.
+        // 计时前构建工具索引，同时预热一次远程查询请求。
         vector.route(queries.get(0).query(), 5);
         HybridToolRouter hybrid = new HybridToolRouter(bm25, vector);
         System.out.printf("Online / end-to-end routing latency: %d seeded queries, 3 warmup calls per strategy%n",
@@ -232,7 +289,9 @@ public final class Benchmark {
         System.out.printf("Scaling: %d seeded queries, 10 warmup rounds and 20 measured rounds per size/strategy%n",
             queries.size());
         System.out.println("Retrieval-only latency; prebuilt indices and hot query vectors");
-        if (provider != null) provider.embed(queries.stream().map(Case::query).toList());
+        if (provider != null) {
+            provider.embed(queries.stream().map(Case::query).toList());
+        }
         for (int size : new int[]{100, 500, 1000}) {
             InMemoryToolRegistry registry = new InMemoryToolRegistry();
             for (int i = 0; i < size; i++) {
@@ -243,7 +302,9 @@ public final class Benchmark {
             try (BM25ToolRouter bm25 = new BM25ToolRouter(registry)) {
                 bm25.route(queries.get(0).query(), 5);
                 VectorToolRouter vector = provider == null ? null : new VectorToolRouter(registry, provider);
-                if (vector != null) vector.route(queries.get(0).query(), 5);
+                if (vector != null) {
+                    vector.route(queries.get(0).query(), 5);
+                }
                 System.out.printf("%d tools%n", size);
                 printLatency("BM25", timeRoutes(bm25, queries, 10 * queries.size(), 20));
                 if (vector != null) {
